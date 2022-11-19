@@ -30,11 +30,20 @@ a {
   height: 100vh;
 }
 
-.card {
+.header {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
+  align-content: flex-start;
+  flex-direction: row;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  padding: 30px;
+}
+.header__logo {
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .title {
@@ -53,12 +62,17 @@ a {
   margin-bottom: 30px;
 }
 
-.price {
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.card__price {
   letter-spacing: -2px;
   font-size: 72px;
 }
-
-.percents {
+.card__percents {
   letter-spacing: 1px;
   font-size: 14px;
   font-weight: 700;

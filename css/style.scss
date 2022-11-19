@@ -31,6 +31,23 @@ a {
 	height: 100vh;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-start;
+    flex-direction: row;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 30px;
+
+    &__logo {
+        font-size: 20px;
+        font-weight: 700;
+    }
+}
+
 .title {
 	display: inline-block;
 	letter-spacing: 1px;
