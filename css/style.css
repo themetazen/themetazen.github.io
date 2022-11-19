@@ -48,6 +48,7 @@ a {
 
 .title {
   display: inline-block;
+  position: absolute;
   letter-spacing: 1px;
   font-weight: 900;
   font-size: 45px;
@@ -59,7 +60,7 @@ a {
   color: transparent;
   text-align: center;
   width: 65%;
-  margin-bottom: 30px;
+  margin-top: -250px;
 }
 
 .card {
@@ -78,7 +79,7 @@ a {
   font-weight: 700;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 720px) {
   .title {
     font-size: 28px;
     width: 90%;
