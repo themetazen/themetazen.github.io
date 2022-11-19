@@ -1,11 +1,12 @@
 const getPrice = () => {
-    const currency = 'usd';
+    const currency = ['usd'];
+    const ids = ['the-open-network'];
 
     const priceContainer = document.querySelector('[data-price]');
     const changeContainer = document.querySelector('[data-change]');
 
     fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=the-open-network&vs_currencies=${currency}&include_24hr_change=true`
+        `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=${currency.join(',')}&include_24hr_change=true`
     )
         .then((result) => result.json())
         .then((data) => {

@@ -30,15 +30,25 @@ a {
   height: 100vh;
 }
 
-.card {
+.header {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
+  align-content: flex-start;
+  flex-direction: row;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  padding: 30px;
+}
+.header__logo {
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .title {
   display: inline-block;
+  position: absolute;
   letter-spacing: 1px;
   font-weight: 900;
   font-size: 45px;
@@ -50,21 +60,26 @@ a {
   color: transparent;
   text-align: center;
   width: 65%;
-  margin-bottom: 30px;
+  margin-top: -250px;
 }
 
-.price {
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.card__price {
   letter-spacing: -2px;
   font-size: 72px;
 }
-
-.percents {
+.card__percents {
   letter-spacing: 1px;
   font-size: 14px;
   font-weight: 700;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 720px) {
   .title {
     font-size: 28px;
     width: 90%;
