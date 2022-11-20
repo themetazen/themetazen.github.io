@@ -7,8 +7,13 @@
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
+html {
+  min-height: -webkit-fill-available;
+}
+
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 body {
