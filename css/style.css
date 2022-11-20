@@ -63,6 +63,13 @@ a {
   margin-top: -250px;
 }
 
+@media screen and (max-width: 768px) {
+  .title {
+    font-size: 28px;
+    width: 90%;
+    margin-top: -300px;
+  }
+}
 .card {
   display: flex;
   flex-direction: column;
@@ -70,7 +77,7 @@ a {
   text-align: center;
 }
 .card__price {
-  letter-spacing: -2px;
+  letter-spacing: 1px;
   font-size: 72px;
 }
 .card__percents {
@@ -80,14 +87,10 @@ a {
 }
 
 @media screen and (max-width: 720px) {
-  .title {
-    font-size: 28px;
-    width: 90%;
-  }
-  .price {
+  .card__price {
     font-size: 58px;
   }
-  .percents {
+  .card__percents {
     font-size: 12px;
   }
 }/*# sourceMappingURL=style.css.map */
