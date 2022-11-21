@@ -1,10 +1,7 @@
-let vh = window.innerHeight * 0.01;
-document.documentElement.style.setProperty('--vh', `${vh}px`);
-
-window.addEventListener('resize', () => {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-});
+const appHeight = () => {
+    const doc = document.documentElement;
+    doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+};
 
 const getPrice = () => {
     const currency = ['usd'];
@@ -38,5 +35,8 @@ const getPrice = () => {
 
     setTimeout(getPrice, 20000);
 };
+
+window.addEventListener('resize', appHeight);
+appHeight();
 
 getPrice();

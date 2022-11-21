@@ -1,14 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap");
+:root {
+  --app-height: 100%;
+}
+
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body {
-  min-height: 100vh;
 }
 
 body {
@@ -32,7 +32,7 @@ a {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
+  height: var(--app-height);
   overflow: hidden;
 }
 
