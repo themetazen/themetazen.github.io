@@ -1,3 +1,6 @@
+let vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
 const getPrice = () => {
     const currency = ['usd'];
     const ids = ['the-open-network'];
@@ -6,7 +9,9 @@ const getPrice = () => {
     const changeContainer = document.querySelector('[data-change]');
 
     fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=${currency.join(',')}&include_24hr_change=true`
+        `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(
+            ','
+        )}&vs_currencies=${currency.join(',')}&include_24hr_change=true`
     )
         .then((result) => result.json())
         .then((data) => {
