@@ -7,8 +7,8 @@ const getPrice = () => {
     const currency = ['usd'];
     const ids = ['the-open-network'];
 
-    const priceContainer = document.querySelector('[data-price]');
-    const changeContainer = document.querySelector('[data-change]');
+    const priceContainer = document.querySelector('[data-card="price"]');
+    const changeContainer = document.querySelector('[data-card="change"]');
 
     fetch(
         `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(
@@ -20,8 +20,8 @@ const getPrice = () => {
             const coins = Object.getOwnPropertyNames(data);
 
             for (let coin of coins) {
-                const coinInfo = data[`${coin}`];
-                const price = coinInfo[`${currency}`];
+                const coinInfo = data[coin];
+                const price = coinInfo[currency].toFixed(2);
                 const change = coinInfo[`${currency}_24h_change`].toFixed(2);
 
                 priceContainer.innerText = `$${price}`;
@@ -39,4 +39,4 @@ const getPrice = () => {
 window.addEventListener('resize', appHeight);
 appHeight();
 
-getPrice();
+window.addEventListener('load', getPrice);

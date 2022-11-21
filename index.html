@@ -11,19 +11,26 @@
     <meta property="og:url" content="https://themetazen.github.io">
     <meta name="twitter:title" content="metazen">
     <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <title>metazen</title>
 </head>
 <body>
     <div class="layout">
         <header class="header">
-            <div class="header__logo">metazen</div>
+            <div class="header__logo"><a href="/">metazen</a></div>
         </header>
-        <h1 class="title">The current value of The Open Network</h1>
-        <div class="card">
-            <h2 class="card__price" data-price></h2>
-            <span class="card__percents" data-change></span>
+
+        <div class="hero">
+            <h1 class="title">The current value of The Open Network</h1>
+            <div class="card">
+                <p class="card__price" data-card="price">$0.00</p>
+                <span class="card__percents" data-card="change"></span>
+            </div>
         </div>
+
     </div>
    <script src="./app.js"></script>
 </body>
