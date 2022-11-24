@@ -5,6 +5,8 @@ const appHeight = () => {
     doc.style.setProperty('--app-height', `${window.innerHeight}px`);
 };
 
+const host = "https://api.coingecko.com/api/v3";
+
 const currency = {
     usd: 'United States Dollar',
     eur: 'Euro',
@@ -24,46 +26,42 @@ const currencySymbol = {
 let selectedCurrency;
 
 const renderCard = (data) => {
-    const coins = Object.keys(data);
     selectedCurrency = select.value;
 
-    for (let coin of coins) {
-        const coinInfo = data[coin];
+    const coin = Object.assign({}, ...data);
+    const { current_price, price_change_percentage_24h } = coin;
 
-        const price = coinInfo[selectedCurrency].toFixed(2);
-        const change = coinInfo[`${selectedCurrency}_24h_change`].toFixed(2);
+    const price = current_price.toFixed(2);
+    const change = price_change_percentage_24h.toFixed(2);
 
-        priceContainer.innerText = `${currencySymbol[selectedCurrency]}${price}`;
+    priceContainer.innerText = `${currencySymbol[selectedCurrency]} ${price}`;
 
-        changeContainer.style.color = `${change < 0 ? 'red' : 'green'}`;
-        changeContainer.innerHTML = `${
-            change < 0 ? change : '+' + change
-        }% <span>&bull;</span> 24h`;
-    }
+    changeContainer.style.color = `${change < 0 ? "red" : "green"}`;
+    changeContainer.innerHTML = `${
+      change < 0 ? change : "+" + change
+    }% <span>&bull;</span> 24h`;
 };
 
-const getPrice = () => {
+const fetchCoin = () => {
     selectedCurrency = select.value;
+
     try {
-        fetch(
-            `https://api.coingecko.com/api/v3/simple/price?ids=the-open-network&vs_currencies=${selectedCurrency}&include_24hr_change=true`
-        )
-            .then((result) => result.json())
-            .then(renderCard);
+        fetch(`${host}/coins/markets?vs_currency=${selectedCurrency}&ids=the-open-network`)
+        .then((result) => result.json())
+        .then(renderCard);
     } catch (e) {
         console.error(e);
     }
 
-    setTimeout(getPrice, 20000);
+    setTimeout(fetchCoin, 20000);
 };
 
-// start
-
+// START
 window.addEventListener('resize', appHeight);
 appHeight();
 
 window.addEventListener('load', () => {
-    getPrice();
+    fetchCoin();
 });
 
 // DOM
@@ -74,4 +72,4 @@ const select = _ge('[data-select]');
 select.innerHTML = Object.keys(currency).map(
     (item) => `<option value=${item}>${currency[item]}</option>`
 );
-select.addEventListener('change', getPrice);
+select.addEventListener('change', fetchCoin);
