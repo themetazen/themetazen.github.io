@@ -33,8 +33,9 @@ const renderCard = (data) => {
 
     const price = current_price.toFixed(2);
     const change = price_change_percentage_24h.toFixed(2);
+    const symbol = currencySymbol[selectedCurrency];
 
-    priceContainer.innerText = `${currencySymbol[selectedCurrency]} ${price}`;
+    priceContainer.innerText = `${symbol} ${price}`;
 
     changeContainer.style.color = `${change < 0 ? "red" : "green"}`;
     changeContainer.innerHTML = `${
