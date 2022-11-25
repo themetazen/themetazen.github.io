@@ -81,7 +81,7 @@ a {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  max-width: 360px;
+  max-width: 390px;
 }
 
 @media screen and (min-width: 1024px) {
