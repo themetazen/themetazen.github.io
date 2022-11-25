@@ -5,7 +5,7 @@ const appHeight = () => {
     doc.style.setProperty('--app-height', `${window.innerHeight}px`);
 };
 
-const host = "https://api.coingecko.com/api/v3";
+const host = 'https://api.coingecko.com/api/v3';
 
 const currency = {
     usd: 'United States Dollar',
@@ -35,21 +35,23 @@ const renderCard = (data) => {
     const change = price_change_percentage_24h.toFixed(2);
     const symbol = currencySymbol[selectedCurrency];
 
-    priceContainer.innerText = `${symbol}${price}`;
-
-    changeContainer.style.color = `${change < 0 ? "red" : "green"}`;
-    changeContainer.innerHTML = `${
-      change < 0 ? change : "+" + change
-    }% <span>&bull;</span> 24h`;
+    cardContainer.innerHTML = `
+        <div class="card__price">${symbol}${price}</div>
+        <div class="card__change" style="color: ${
+            change < 0 ? 'red' : 'green'
+        }">${change < 0 ? change : '+' + change}% <span>&bull;</span> 24h</div>
+    `;
 };
 
 const fetchCoin = () => {
     selectedCurrency = select.value;
 
     try {
-        fetch(`${host}/coins/markets?vs_currency=${selectedCurrency}&ids=the-open-network`)
-        .then((result) => result.json())
-        .then(renderCard);
+        fetch(
+            `${host}/coins/markets?vs_currency=${selectedCurrency}&ids=the-open-network`
+        )
+            .then((result) => result.json())
+            .then(renderCard);
     } catch (e) {
         console.error(e);
     }
@@ -66,8 +68,7 @@ window.addEventListener('load', () => {
 });
 
 // DOM
-const priceContainer = _ge('[data-card="price"]');
-const changeContainer = _ge('[data-card="change"]');
+const cardContainer = _ge('[data-toncoin-card]');
 
 const select = _ge('[data-select]');
 select.innerHTML = Object.keys(currency).map(
