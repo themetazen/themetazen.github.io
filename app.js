@@ -1,4 +1,4 @@
-const _ge = (elem) => document.querySelector(elem);
+const q = (elem) => document.querySelector(elem);
 
 const appHeight = () => {
     const doc = document.documentElement;
@@ -6,6 +6,7 @@ const appHeight = () => {
 };
 
 const host = 'https://api.coingecko.com/api/v3';
+const GLOBAL_STORAGE_KEY = 'metazen';
 
 const currency = {
     usd: 'United States Dollar',
@@ -23,17 +24,20 @@ const currencySymbol = {
     cny: '¥',
 };
 
-let selectedCurrency;
+const defaultStorage = {
+    currency: 'usd',
+};
+
+const storage =
+    JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || defaultStorage;
 
 const renderCard = (data) => {
-    selectedCurrency = select.value;
-
     const coin = Object.assign({}, ...data);
     const { current_price, price_change_percentage_24h } = coin;
 
     const price = current_price.toFixed(2);
     const change = price_change_percentage_24h.toFixed(2);
-    const symbol = currencySymbol[selectedCurrency];
+    const symbol = currencySymbol[storage.currency];
 
     cardContainer.innerHTML = `
         <div class="card__price">${symbol}${price}</div>
@@ -43,12 +47,10 @@ const renderCard = (data) => {
     `;
 };
 
-const fetchCoin = () => {
-    selectedCurrency = select.value;
-
+const fetchCoin = async () => {
     try {
-        fetch(
-            `${host}/coins/markets?vs_currency=${selectedCurrency}&ids=the-open-network`
+        await fetch(
+            `${host}/coins/markets?vs_currency=${storage.currency}&ids=the-open-network`
         )
             .then((result) => result.json())
             .then(renderCard);
@@ -57,6 +59,13 @@ const fetchCoin = () => {
     }
 
     setTimeout(fetchCoin, 20000);
+};
+
+const changeCurrencyHandler = (e) => {
+    storage.currency = e.target.value;
+    localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
+    cardContainer.innerHTML = `<div class="loader"></div>`;
+    fetchCoin();
 };
 
 // START
@@ -68,10 +77,11 @@ window.addEventListener('load', () => {
 });
 
 // DOM
-const cardContainer = _ge('[data-toncoin-card]');
+const cardContainer = q('[data-toncoin-card]');
+const selectCurrency = q('[data-select-currency]');
 
-const select = _ge('[data-select]');
-select.innerHTML = Object.keys(currency).map(
+selectCurrency.innerHTML = Object.keys(currency).map(
     (item) => `<option value=${item}>${currency[item]}</option>`
 );
-select.addEventListener('change', fetchCoin);
+selectCurrency.value = storage.currency;
+selectCurrency.addEventListener('change', changeCurrencyHandler);

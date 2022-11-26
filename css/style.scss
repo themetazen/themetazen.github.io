@@ -62,8 +62,8 @@ a {
         position: relative;
 
         & > a {
-            color: #eee;
-            font-size: 20px;
+            color: #fff;
+            font-size: 18px;
             font-weight: 700;
         }
     }
@@ -98,18 +98,15 @@ a {
 	}
 }
 
-.donut {
+.loader {
 	width: 3rem;
 	height: 3rem;
 	border-radius: 50%;
 	border: 0.3rem solid rgba(#979fd0, 0.3);
 	border-top-color: #979fd0;
+	border-bottom-color: #979fd0;
 	animation: 1.5s spin infinite linear;
 	margin: 0 auto;
-  
-	&.multi {
-	  border-bottom-color: #979fd0;
-	}
 }
   
 @keyframes spin {
