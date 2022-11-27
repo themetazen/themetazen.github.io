@@ -1,5 +1,8 @@
+@import url("https://use.fontawesome.com/releases/v5.0.13/css/all.css");
 :root {
   --app-height: 100%;
+  --text-color-primary: #eeeeee;
+  --background-color: rgb(1, 30, 51);
 }
 
 *,
@@ -27,8 +30,8 @@ body {
   font-family: "Montserrat", sans-serif;
   font-weight: normal;
   font-size: 16px;
-  background-color: rgb(1, 30, 51);
-  color: #eee;
+  background-color: var(--background-color);
+  color: var(--text-color-primary);
 }
 
 a {
@@ -51,6 +54,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-content: flex-start;
+  align-items: center;
   flex-direction: row;
   position: fixed;
   left: 0;
@@ -62,8 +66,8 @@ a {
   position: relative;
 }
 .header__logo > a {
-  color: #eee;
-  font-size: 20px;
+  color: #fff;
+  font-size: 18px;
   font-weight: 700;
 }
 
@@ -81,7 +85,7 @@ a {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  max-width: 320px;
+  max-width: 390px;
 }
 
 @media screen and (min-width: 1024px) {
@@ -90,19 +94,43 @@ a {
     max-width: 550px;
   }
 }
+.loader {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 0.3rem solid rgba(151, 159, 208, 0.3);
+  border-top-color: #979fd0;
+  border-bottom-color: #979fd0;
+  -webkit-animation: 1.5s spin infinite linear;
+          animation: 1.5s spin infinite linear;
+  margin: 0 auto;
+}
+
+@-webkit-keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .card {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
   margin-top: 30px;
+  height: 107px;
 }
 .card__price {
   letter-spacing: 1px;
   font-size: 72px;
   font-weight: 700;
 }
-.card__percents {
+.card__change {
   letter-spacing: 1px;
   font-size: 12px;
   font-weight: 700;
@@ -111,11 +139,81 @@ a {
 @media screen and (min-width: 1024px) {
   .card {
     margin-top: 40px;
+    height: 129px;
   }
   .card__price {
     font-size: 90px;
   }
-  .card__percents {
+  .card__change {
     font-size: 14px;
   }
+}
+.select {
+  width: 100%;
+  position: relative;
+}
+.select.open .select__dropdown {
+  display: block;
+}
+.select.open .select__input > i {
+  transform: rotate(180deg);
+}
+.select.open .select__backdrop {
+  display: block;
+}
+.select__input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.25);
+  color: #eeeeee;
+  font-size: 14px;
+  border-radius: 5px;
+  height: 40px;
+  cursor: pointer;
+  padding: 0 1rem;
+}
+.select__input > span {
+  overflow: hidden;
+  word-wrap: break-word;
+}
+.select__input > i {
+  margin-left: 15px;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease-in;
+}
+.select__dropdown {
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  top: 40px;
+  left: 0;
+  right: 0;
+  margin-top: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+.select__list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.select__backdrop {
+  position: fixed;
+  display: none;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -10;
+}
+.select__item {
+  padding: 1rem;
+  font-size: 14px;
+}
+.select__item:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.03);
+  transition: 0.15s background-color ease-in;
 }/*# sourceMappingURL=style.css.map */

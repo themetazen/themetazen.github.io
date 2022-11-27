@@ -1,42 +1,89 @@
+import Select from './libs/Select/index.js';
+
+const q = (elem) => document.querySelector(elem);
+
 const appHeight = () => {
     const doc = document.documentElement;
     doc.style.setProperty('--app-height', `${window.innerHeight}px`);
 };
 
-const getPrice = () => {
-    const currency = ['usd'];
-    const ids = ['the-open-network'];
+const host = 'https://api.coingecko.com/api/v3';
+const GLOBAL_STORAGE_KEY = 'metazen';
 
-    const priceContainer = document.querySelector('[data-card="price"]');
-    const changeContainer = document.querySelector('[data-card="change"]');
-
-    fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(
-            ','
-        )}&vs_currencies=${currency.join(',')}&include_24hr_change=true`
-    )
-        .then((result) => result.json())
-        .then((data) => {
-            const coins = Object.getOwnPropertyNames(data);
-
-            for (let coin of coins) {
-                const coinInfo = data[coin];
-                const price = coinInfo[currency].toFixed(2);
-                const change = coinInfo[`${currency}_24h_change`].toFixed(2);
-
-                priceContainer.innerText = `$${price}`;
-
-                changeContainer.style.color = `${change < 0 ? 'red' : 'green'}`;
-                changeContainer.innerHTML = `${
-                    change < 0 ? change : '+' + change
-                }% <span>&bull;</span> 24h`;
-            }
-        });
-
-    setTimeout(getPrice, 20000);
+const currency = {
+    usd: 'United States Dollar',
+    eur: 'Euro',
+    rub: 'Russian Ruble',
+    krw: 'South Korean Won',
+    cny: 'China Yuan',
 };
 
+const currencySymbol = {
+    usd: '$',
+    eur: '€',
+    rub: '₽',
+    krw: '₩',
+    cny: '¥',
+};
+
+const defaultStorage = {
+    currency: 'usd',
+};
+
+const storage =
+    JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || defaultStorage;
+
+const renderCard = (data) => {
+    const coin = Object.assign({}, ...data);
+    const { current_price, price_change_percentage_24h } = coin;
+
+    const price = current_price.toFixed(2);
+    const change = price_change_percentage_24h.toFixed(2);
+    const symbol = currencySymbol[storage.currency];
+
+    cardContainer.innerHTML = `
+        <div class="card__price">${symbol}${price}</div>
+        <div class="card__change" style="color: ${
+            change < 0 ? 'red' : 'green'
+        }">${change < 0 ? change : '+' + change}% <span>&bull;</span> 24h</div>
+    `;
+};
+
+const fetchCoin = async () => {
+    try {
+        await fetch(
+            `${host}/coins/markets?vs_currency=${storage.currency}&ids=the-open-network`
+        )
+            .then((result) => result.json())
+            .then(renderCard);
+    } catch (e) {
+        console.error(e);
+    }
+
+    setTimeout(fetchCoin, 20000);
+};
+
+const changeCurrencyHandler = (item) => {
+    storage.currency = item;
+    localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
+    cardContainer.innerHTML = `<div class="loader"></div>`;
+    fetchCoin();
+};
+
+// START
 window.addEventListener('resize', appHeight);
 appHeight();
 
-window.addEventListener('load', getPrice);
+window.addEventListener('load', () => {
+    fetchCoin();
+});
+
+const cardContainer = q('[data-toncoin-card]');
+
+new Select('#select-currency', {
+    data: currency,
+    valueDefault: storage.currency,
+    onChange(item) {
+        changeCurrencyHandler(item);
+    },
+});
