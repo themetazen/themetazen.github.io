@@ -180,10 +180,16 @@ a {
 	  justify-content: space-between;
 	  background-color: rgba(0, 0, 0, 0.25);
 	  color: #eeeeee;
+	  font-size: 14px;
 	  border-radius: 5px;
 	  height: 40px;
 	  cursor: pointer;
 	  padding: 0 1rem;
+
+	  & > span {
+		overflow: hidden;
+		word-wrap:break-word;
+	  }
   
 	  & > i {
 		margin-left: 15px;
@@ -223,6 +229,7 @@ a {
   
 	&__item {
 	  padding: 1rem;
+	  font-size: 14px;
   
 	  &:hover {
 		cursor: pointer;

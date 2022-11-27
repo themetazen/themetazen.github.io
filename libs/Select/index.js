@@ -14,23 +14,20 @@ export default class Select {
     }
 
     #setup() {
-        this.clickHandler = this.clickHandler.bind(this);
-        this.el.addEventListener('click', this.clickHandler);
+        this.el.addEventListener('click', (event) => {
+            const { type } = event.target.dataset;
+
+            if (type === 'input' || type === undefined || type === 'arrow') {
+                this.toggle();
+            } else if (type === 'item') {
+                const id = event.target.dataset.id;
+                this.select(id);
+                this.close();
+            } else if (type === 'backdrop') {
+                this.close();
+            }
+        });
         this.value = this.el.querySelector('span');
-    }
-
-    clickHandler(event) {
-        const { type } = event.target.dataset;
-
-        if (type === 'input') {
-            this.toggle();
-        } else if (type === 'item') {
-            const id = event.target.dataset.id;
-            this.select(id);
-            this.close();
-        } else if (type === 'backdrop') {
-            this.close();
-        }
     }
 
     get isOpen() {
@@ -61,6 +58,7 @@ export default class Select {
         const text = this.selected
             ? data[this.selected]
             : data[Object.keys(data)[0]];
+
         const items = Object.keys(data).map((item) => {
             return `<li class="select__item" data-type="item" data-id="${item}">${data[item]}</li>`;
         });

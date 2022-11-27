@@ -167,10 +167,15 @@ a {
   justify-content: space-between;
   background-color: rgba(0, 0, 0, 0.25);
   color: #eeeeee;
+  font-size: 14px;
   border-radius: 5px;
   height: 40px;
   cursor: pointer;
   padding: 0 1rem;
+}
+.select__input > span {
+  overflow: hidden;
+  word-wrap: break-word;
 }
 .select__input > i {
   margin-left: 15px;
@@ -205,6 +210,7 @@ a {
 }
 .select__item {
   padding: 1rem;
+  font-size: 14px;
 }
 .select__item:hover {
   cursor: pointer;

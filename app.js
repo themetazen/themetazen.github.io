@@ -63,12 +63,12 @@ const fetchCoin = async () => {
     setTimeout(fetchCoin, 20000);
 };
 
-/*const changeCurrencyHandler = (e) => {
-    storage.currency = e.target.value;
+const changeCurrencyHandler = (item) => {
+    storage.currency = item;
     localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
     cardContainer.innerHTML = `<div class="loader"></div>`;
     fetchCoin();
-};*/
+};
 
 // START
 window.addEventListener('resize', appHeight);
@@ -78,23 +78,12 @@ window.addEventListener('load', () => {
     fetchCoin();
 });
 
-// DOM
 const cardContainer = q('[data-toncoin-card]');
 
-/*const selectCurrency = q('[data-select-currency]');
-selectCurrency.innerHTML = Object.keys(currency).map(
-    (item) => `<option value=${item}>${currency[item]}</option>`
-);
-selectCurrency.value = storage.currency;
-selectCurrency.addEventListener('change', changeCurrencyHandler);*/
-
-const selectCurrency = new Select('#select-currency', {
+new Select('#select-currency', {
     data: currency,
     valueDefault: storage.currency,
     onChange(item) {
-        storage.currency = item;
-        localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
-        cardContainer.innerHTML = `<div class="loader"></div>`;
-        fetchCoin();
+        changeCurrencyHandler(item);
     },
 });
