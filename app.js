@@ -1,3 +1,5 @@
+import Select from './libs/Select/index.js';
+
 const q = (elem) => document.querySelector(elem);
 
 const appHeight = () => {
@@ -61,12 +63,12 @@ const fetchCoin = async () => {
     setTimeout(fetchCoin, 20000);
 };
 
-const changeCurrencyHandler = (e) => {
+/*const changeCurrencyHandler = (e) => {
     storage.currency = e.target.value;
     localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
     cardContainer.innerHTML = `<div class="loader"></div>`;
     fetchCoin();
-};
+};*/
 
 // START
 window.addEventListener('resize', appHeight);
@@ -78,10 +80,21 @@ window.addEventListener('load', () => {
 
 // DOM
 const cardContainer = q('[data-toncoin-card]');
-const selectCurrency = q('[data-select-currency]');
 
+/*const selectCurrency = q('[data-select-currency]');
 selectCurrency.innerHTML = Object.keys(currency).map(
     (item) => `<option value=${item}>${currency[item]}</option>`
 );
 selectCurrency.value = storage.currency;
-selectCurrency.addEventListener('change', changeCurrencyHandler);
+selectCurrency.addEventListener('change', changeCurrencyHandler);*/
+
+const selectCurrency = new Select('#select-currency', {
+    data: currency,
+    valueDefault: storage.currency,
+    onChange(item) {
+        storage.currency = item;
+        localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
+        cardContainer.innerHTML = `<div class="loader"></div>`;
+        fetchCoin();
+    },
+});

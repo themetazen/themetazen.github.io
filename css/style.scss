@@ -1,5 +1,9 @@
+@import url("https://use.fontawesome.com/releases/v5.0.13/css/all.css");
+
 :root {
     --app-height: 100%;
+	--text-color-primary: #eeeeee;
+	--background-color: rgb(1, 30, 51);
 }
 
 *,
@@ -27,8 +31,8 @@ body {
 	font-family: 'Montserrat', sans-serif;
 	font-weight: normal;
 	font-size: 16px;
-	background-color: rgb(1, 30, 51);
-	color: #eee;
+	background-color: var(--background-color);
+	color: var(--text-color-primary);
 }
 
 a {
@@ -51,6 +55,7 @@ a {
     display: flex;
     justify-content: space-between;
     align-content: flex-start;
+	align-items: center;
     flex-direction: row;
     position: fixed;
     left: 0;
@@ -129,7 +134,7 @@ a {
 		font-weight: 700;
 	}
 	
-	&__percents {
+	&__change {
 		letter-spacing: 1px;
 		font-size: 12px;
 		font-weight: 700;
@@ -145,8 +150,84 @@ a {
 			font-size: 90px;
 		}
 
-        &__percents {
+        &__change {
             font-size: 14px;
         }
     }
+}
+
+.select {
+	width: 100%;
+	position: relative;
+  
+	&.open {
+	  .select__dropdown {
+		display: block;
+	  }
+  
+	  .select__input > i {
+		transform: rotate(180deg);
+	  }
+  
+	  .select__backdrop {
+		display: block;
+	  }
+	}
+  
+	&__input {
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  background-color: rgba(0, 0, 0, 0.25);
+	  color: #eeeeee;
+	  border-radius: 5px;
+	  height: 40px;
+	  cursor: pointer;
+	  padding: 0 1rem;
+  
+	  & > i {
+		margin-left: 15px;
+		transform: rotate(0deg);
+		transition: transform 0.3s ease-in;
+	  }
+	}
+  
+	&__dropdown {
+	  display: none;
+	  position: absolute;
+	  background-color: rgba(0, 0, 0, 0.25);
+	  border-radius: 5px;
+	  top: 40px;
+	  left: 0;
+	  right: 0;
+	  margin-top: 10px;
+	  max-height: 250px;
+	  overflow-y: auto;
+	}
+  
+	&__list {
+	  padding: 0;
+	  margin: 0;
+	  list-style: none;
+	}
+  
+	&__backdrop {
+	  position: fixed;
+	  display: none;
+	  left: 0;
+	  top: 0;
+	  right: 0;
+	  bottom: 0;
+	  z-index: -10;
+	}
+  
+	&__item {
+	  padding: 1rem;
+  
+	  &:hover {
+		cursor: pointer;
+		background-color: rgba(255, 255, 255, 0.03);
+		transition: 0.15s background-color ease-in;
+	  }
+	}
 }
