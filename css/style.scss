@@ -4,6 +4,7 @@
     --app-height: 100%;
 	--text-color-primary: #eeeeee;
 	--background-color: rgb(1, 30, 51);
+	--background-gradient: linear-gradient(to bottom, #011e33, #0e1e30, #161e2d, #1b1e29, #1e1f26);
 }
 
 *,
@@ -32,6 +33,7 @@ body {
 	font-weight: normal;
 	font-size: 16px;
 	background-color: var(--background-color);
+	background-image: var(--background-gradient);
 	color: var(--text-color-primary);
 }
 
@@ -195,7 +197,7 @@ a {
 	  & > i {
 		margin-left: 15px;
 		transform: rotate(0deg);
-		transition: transform 0.3s ease-in;
+		transition: transform 0.1s ease-in;
 	  }
 	}
   
