@@ -62,6 +62,7 @@ a {
   top: 0;
   right: 0;
   padding: 30px 30px 0px 30px;
+  gap: 15px;
 }
 .header__logo {
   position: relative;
@@ -221,4 +222,21 @@ a {
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.09);
   transition: 0.15s background-color ease-in;
+}
+
+.nav__btn-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 1000;
+  cursor: pointer;
+}
+.nav__btn-toggle > span {
+  display: block;
+  position: relative;
+  width: 33px;
+  height: 4px;
+  background: #fff;
+  border-radius: 3px;
+  transition: all 0.2s ease;
 }/*# sourceMappingURL=style.css.map */
