@@ -10,7 +10,7 @@ const appHeight = () => {
 
 const host = 'https://api.coingecko.com/api/v3';
 const actions = {
-    coin: 'coins/markets',
+    coin: '/coins/markets',
 };
 const GLOBAL_STORAGE_KEY = 'metazen';
 
@@ -56,10 +56,12 @@ const renderCard = (data) => {
 
 const fetchCoin = async () => {
     get(
-        `${host}/${actions.coin}?vs_currency=${storage.currency}&ids=the-open-network`
+        host +
+            actions.coin +
+            `?vs_currency=${storage.currency}&ids=the-open-network`
     )
         .then(renderCard)
-        .catch((e) => console.error(e));
+        .catch((e) => console.error(e.error));
 
     setTimeout(fetchCoin, 20000);
 };
