@@ -1,4 +1,5 @@
-import Select from './libs/Select/index.js';
+import { get } from './utils/api.service.js';
+import Select from './utils/Select/index.js';
 
 const q = (elem) => document.querySelector(elem);
 
@@ -8,6 +9,9 @@ const appHeight = () => {
 };
 
 const host = 'https://api.coingecko.com/api/v3';
+const actions = {
+    coin: '/coins/markets',
+};
 const GLOBAL_STORAGE_KEY = 'metazen';
 
 const currency = {
@@ -28,6 +32,7 @@ const currencySymbol = {
 
 const defaultStorage = {
     currency: 'usd',
+    address: null,
 };
 
 const storage =
@@ -50,15 +55,13 @@ const renderCard = (data) => {
 };
 
 const fetchCoin = async () => {
-    try {
-        await fetch(
-            `${host}/coins/markets?vs_currency=${storage.currency}&ids=the-open-network`
-        )
-            .then((result) => result.json())
-            .then(renderCard);
-    } catch (e) {
-        console.error(e);
-    }
+    get(
+        host +
+            actions.coin +
+            `?vs_currency=${storage.currency}&ids=the-open-network`
+    )
+        .then(renderCard)
+        .catch((e) => console.error(e.error));
 
     setTimeout(fetchCoin, 20000);
 };
