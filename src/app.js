@@ -1,6 +1,8 @@
 import { get } from './utils/api.service.js';
 import Select from './utils/Select/index.js';
 
+import './style/main.scss';
+
 const q = (elem) => document.querySelector(elem);
 
 const appHeight = () => {

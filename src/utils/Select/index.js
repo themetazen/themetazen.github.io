@@ -1,3 +1,5 @@
+import './style/select.scss';
+
 export default class Select {
     constructor(selector, options) {
         this.el = document.querySelector(selector);
