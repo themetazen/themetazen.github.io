@@ -11,7 +11,8 @@ module.exports = {
     },
     plugins: [
         new HtmlPlugin({
-            template: './src/index.html'
+            template: './src/index.html',
+            favicon: './src//assets/favicon.png',
         }),
         new MiniCssPlugin({
             filename: 'common.css'
@@ -20,13 +21,17 @@ module.exports = {
     module: {
         rules: [
             {
-                test:/\.(s*)css$/,
+                test: /\.(s*)css$/,
                 exclude: /node_modules/,
                 use: [
                     {loader: MiniCssPlugin.loader},
                     'css-loader',
                     'sass-loader'
                 ]
+            }, 
+            {
+                test: /\.(png|jpg|jpeg|svg|ico|gif)$/,
+                use: ['file-loader']
             }
         ]
     },

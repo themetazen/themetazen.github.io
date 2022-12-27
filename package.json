@@ -20,6 +20,7 @@
   "homepage": "https://github.com/themetazen/themetazen.github.io#readme",
   "devDependencies": {
     "css-loader": "^6.7.3",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^2.7.2",

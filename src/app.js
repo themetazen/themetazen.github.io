@@ -1,16 +1,12 @@
-import { get } from './utils/api.service.js';
-import Select from './utils/Select/index.js';
+import { get } from './utils/api.service';
+import { elem } from './helpers/elem';
+import { fixHeight } from './helpers/fix-height';
+
+import Select from './utils/Select';
 
 import './style/main.scss';
 
-const q = (elem) => document.querySelector(elem);
-
-const appHeight = () => {
-    const doc = document.documentElement;
-    doc.style.setProperty('--app-height', `${window.innerHeight}px`);
-};
-
-const host = 'https://api.coingecko.com/api/v3';
+const host = 'https://api.coingecko.com/api/v3'; 
 const actions = {
     coin: '/coins/markets',
 };
@@ -76,14 +72,14 @@ const changeCurrencyHandler = (item) => {
 };
 
 // START
-window.addEventListener('resize', appHeight);
-appHeight();
+window.addEventListener('resize', fixHeight);
+fixHeight();
 
 window.addEventListener('load', () => {
     fetchCoin();
 });
 
-const cardContainer = q('[data-toncoin-card]');
+const cardContainer = elem('[data-toncoin-card]');
 
 new Select('#select-currency', {
     data: currency,
