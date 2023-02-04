@@ -12,7 +12,7 @@ module.exports = {
     plugins: [
         new HtmlPlugin({
             template: './src/index.html',
-            favicon: './src//assets/favicon.png',
+            favicon: './src/assets/favicon.png',
         }),
         new MiniCssPlugin({
             filename: 'common.css'

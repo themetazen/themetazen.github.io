@@ -1,7 +1,4 @@
 import { get } from './utils/api.service';
-import { elem } from './helpers/elem';
-import { fixHeight } from './helpers/fix-height';
-
 import Select from './utils/Select';
 
 import './style/main.scss';
@@ -33,6 +30,15 @@ const defaultStorage = {
     address: null,
 };
 
+const elem = (sel) => document.querySelector(sel);
+const create = (tag) => document.createElement(tag);
+const createElement = () => {};
+
+const fixHeight = () => {
+    const doc = document.documentElement;
+    doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+};
+
 const storage =
     JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || defaultStorage;
 
@@ -48,7 +54,7 @@ const renderCard = (data) => {
         <div class="card__price">${symbol}${price}</div>
         <div class="card__change" style="color: ${
             change < 0 ? 'red' : 'green'
-        }">${change < 0 ? change : '+' + change}% <span>&bull;</span> 24h</div>
+        }">${change < 0 ? change : `+${change}`}% <span>&bull;</span> 24h</div>
     `;
 };
 
@@ -87,4 +93,18 @@ new Select('#select-currency', {
     onChange(item) {
         changeCurrencyHandler(item);
     },
+    position: 'top'
 });
+
+const slidebarToggle = elem("#slidebar .slidebar__toggle");
+const slidebarBody = elem("#slidebar .slidebar__body");
+const slidebarToggleHandler = () => {
+    slidebarToggle.classList.toggle('active');
+    slidebarBody.classList.toggle('active');
+}
+slidebarToggle.addEventListener('click', slidebarToggleHandler);
+
+const connectBtn = elem("#connect-btn");
+connectBtn.addEventListener('click', () => {
+    alert("connect wallet");
+})

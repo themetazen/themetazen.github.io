@@ -1,11 +1,25 @@
 @import url("https://use.fontawesome.com/releases/v5.0.13/css/all.css");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap');
 
 :root {
-    --app-height: 100%;
+	--app-height: 100%;
 	--text-color-primary: #eeeeee;
-	--background-color: rgb(14, 17, 22);
-	--background-gradient: linear-gradient(to bottom, #0e1116, #0e141d, #0c1824, #081b2c, #011e33);
-}
+	--background-primary: #0e1116;
+	--background-second: #011e33;
+	--background-gradient: linear-gradient(
+	  to bottom,
+	  #0e1116,
+	  #0e1116,
+	  #0e1116,
+	  #0e1218,
+	  #0e131b,
+	  #0e141d,
+	  #0d1722,
+	  #0b1928,
+	  #071b2d,
+	  #011e33
+	);
+  }
 
 *,
 *::before,
@@ -32,7 +46,7 @@ body {
 	font-family: 'Montserrat', sans-serif;
 	font-weight: normal;
 	font-size: 16px;
-	background-color: var(--background-color);
+	background-color: var(--background-primary);
 	background-image: var(--background-gradient);
 	color: var(--text-color-primary);
 }
@@ -40,6 +54,47 @@ body {
 a {
 	cursor: pointer;
 	text-decoration: none;
+}
+
+.btn {
+	display: inline-block;
+	align-items: center;
+	border: 2px solid rgb(0, 0, 0);
+	border-radius: 9999px;
+	padding: 10px 25px !important;
+	background-color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+	font-family: Montserrat, sans-serif;
+	font-weight: 700;
+	font-size: 12px;
+	text-transform: uppercase;
+	text-decoration: none;
+	letter-spacing: 1px;
+	cursor: pointer;
+	box-sizing: border-box;
+	transition: background-color 300ms ease 0s, 
+				color 300ms ease 0s;
+	width: 100%;
+  
+	&--small {
+	  padding: 8px 20px !important;
+	}
+  
+	&--medium {
+	  padding: 10px 25px !important;
+	}
+  
+	&:hover:not([disabled]) {
+	  background-color: rgb(0, 0, 0);
+	  color: rgb(255, 255, 255);
+	}
+  
+	&:disabled {
+	  background: #aaa;
+	  border: aaa;
+	  color: a1a1a1;
+	  cursor: default;
+	}
 }
 
 .layout {
@@ -51,6 +106,12 @@ a {
 	height: 100vh;
     height: var(--app-height);
     overflow: hidden;
+	background-image: radial-gradient(
+    	var(--background-second) 1px,
+    	transparent 1px
+  	) !important;
+  	background-size: 20px 20px;
+	position: relative;
 }
 
 .header {
@@ -59,6 +120,7 @@ a {
     align-content: flex-start;
 	align-items: center;
     flex-direction: row;
+	gap: 20px;
     position: fixed;
     left: 0;
     top: 0;
@@ -72,11 +134,16 @@ a {
             color: #fff;
             font-size: 1.125em;
             font-weight: 700;
+			text-shadow: red -1.5px 0,
+					     cyan 1.5px 0;
         }
     }
 }
 
 .hero {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
 	padding: 0px 30px;
 }
 
@@ -91,7 +158,6 @@ a {
 		rgb(255, 0, 238) 0%,
 		rgb(255, 170, 0) 100%
 	);
-	background-clip: text;
 	background-clip: text;
 	-webkit-background-clip: text;
 	color: transparent;
@@ -124,37 +190,124 @@ a {
 }
 
 .card {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
 	text-align: center;
-	margin-top: 30px;
-	height: 107px;
-
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+  
 	&__price {
-		letter-spacing: 1px;
-		font-size: 4.5em;
-		font-weight: 700;
+	  font-size: calc(1em + 6vw);
+	  letter-spacing: 1px;
+	  font-weight: 700;
+	  overflow: hidden;
+	  white-space: nowrap;
+	  width: 100%;
+  
+	  @media screen and (max-width: 479px) {
+		font-size: calc(1em + 10vw);
+	  }
 	}
-	
+  
 	&__change {
-		letter-spacing: 1px;
-		font-size: 0.75em;
-		font-weight: 700;
+	  letter-spacing: 1px;
+	  font-size: 0.9em;
+	  font-weight: 700;
+	  
+	  @media screen and (max-width: 479px) {
+		font-size: 0.8em;
+	  }
 	}
-}
+  }
 
-@media screen and (min-width: 1024px) {
-    .card {
-		margin-top: 40px;
-		height: 129px;
+// .card {
+// 	display: flex;
+// 	flex-direction: column;
+// 	justify-content: center;
+// 	text-align: center;
+// 	margin-top: 30px;
 
-		&__price {
-			font-size: 5.625em;
+// 	&__price {
+// 		letter-spacing: 1px;
+// 		font-size: 4.5em;
+// 		font-weight: 700;
+// 	}
+	
+// 	&__change {
+// 		letter-spacing: 1px;
+// 		font-size: 0.75em;
+// 		font-weight: 700;
+// 	}
+
+// 	@media screen and (min-width: 1024px) {
+// 		margin-top: 40px;
+// 		height: 129px;
+	
+// 		&__price {
+// 			font-size: 5.625em;
+// 		}
+	
+// 		&__change {
+// 			font-size: 0.875em;
+// 		}
+// 	}
+// }
+
+.slidebar {
+
+	&__toggle {
+		display: block;
+		position: relative;
+		-webkit-user-select: none;
+  		user-select: none;
+		z-index: 1000;
+		cursor: pointer;
+		transition: 0.25s margin 0.25s, 0.25s transform;
+
+		& > span {
+			display: block;
+			width: 33px;
+			height: 4px;
+			
+			background: rgb(255, 255, 255);
+			border-radius: 3px;
 		}
 
-        &__change {
-            font-size: 0.875em;
-        }
-    }
+		& > span:nth-child(1) {
+			margin-bottom: 5px;
+		}
+
+		& > span:nth-child(3) {
+			margin-top: 5px;
+		}
+
+	}
+
+	&__body {
+		position: fixed;
+		right: -500px;
+		top: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		width: 350px;
+		backdrop-filter: blur(5px);
+		-webkit-backdrop-filter: blur(5px);
+		background-color: rgba(0, 0, 0, 0.3);
+		border-left: 1px solid rgba(0, 0, 0, 0.1);
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+		padding: 30px;
+		padding-top: 95px;
+		z-index: 999;
+		transition: right 0.2s ease-in;
+
+		@media screen and (max-width: 480px) {
+			width: 100%;
+		}
+
+		&.active {
+			right: 0;
+		}
+	}
 }

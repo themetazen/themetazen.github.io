@@ -1,11 +1,28 @@
 import './style/select.scss';
 
+/* 
+    Options
+
+    - data
+    - valueDefault
+    - onChange
+    - position
+*/
+
 export default class Select {
     constructor(selector, options) {
         this.el = document.querySelector(selector);
         this.el.classList.add('select');
         this.options = options;
         this.selected = options.valueDefault;
+        
+        this.position = (() => {
+            if (options.position === 'top') {
+                return 'top';
+            } else {
+                return 'bottom';
+            }
+        })();
 
         this.#render();
         this.#setup();
@@ -71,7 +88,7 @@ export default class Select {
           <span>${text}</span>
           <i class="fa fa-chevron-down" data-type="arrow"></i> 
         </div>
-        <div class="select__dropdown">
+        <div class="select__dropdown ${this.position}">
           <ul class="select__list">
             ${items.join('')}
           </ul>
