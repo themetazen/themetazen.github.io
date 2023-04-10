@@ -1,4 +1,4 @@
-import './style/select.scss';
+import './select.scss';
 
 /* 
     Options

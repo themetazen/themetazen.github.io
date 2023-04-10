@@ -1,5 +1,5 @@
 import { get } from './utils/api.service';
-import Select from './utils/Select';
+import Select from './components/select';
 
 import './style/main.scss';
 
