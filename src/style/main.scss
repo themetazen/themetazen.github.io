@@ -209,14 +209,24 @@ a {
 	}
   
 	&__change {
+	  color: #aaa;
 	  letter-spacing: 1px;
 	  font-size: 0.9em;
-	  font-weight: 700;
 	  
 	  @media screen and (max-width: 479px) {
 		font-size: 0.8em;
 	  }
+
+	  &.falling {
+		color: #ff4040;
+	  }
+	  
+	  &.rising {
+		color: #30ff20;
+	  }
 	}
+
+
 }
 
 .slidebar {

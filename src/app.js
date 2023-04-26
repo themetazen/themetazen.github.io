@@ -31,9 +31,6 @@ const defaultStorage = {
 };
 
 const elem = (sel) => document.querySelector(sel);
-const create = (tag) => document.createElement(tag);
-const createElement = () => {};
-
 const fixHeight = () => {
     const doc = document.documentElement;
     doc.style.setProperty('--app-height', `${window.innerHeight}px`);
@@ -52,9 +49,9 @@ const renderCard = (data) => {
 
     cardContainer.innerHTML = `
         <div class="card__price">${symbol}${price}</div>
-        <div class="card__change" style="color: ${
-            change < 0 ? 'red' : 'green'
-        }">${change < 0 ? change : `+${change}`}% <span>&bull;</span> 24h</div>
+        <div class="card__change ${change < 0 ? 'falling' : 'rising'}"}">
+            <strong>${change}% <span>&bull;</span> 24h<strong>
+        </div>
     `;
 };
 
