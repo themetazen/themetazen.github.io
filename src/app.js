@@ -1,14 +1,9 @@
-import { get } from './utils/api.service.js';
-import Select from './utils/Select/index.js';
+import { get } from './utils/api.service';
+import Select from './components/select';
 
-const q = (elem) => document.querySelector(elem);
+import './style/main.scss';
 
-const appHeight = () => {
-    const doc = document.documentElement;
-    doc.style.setProperty('--app-height', `${window.innerHeight}px`);
-};
-
-const host = 'https://api.coingecko.com/api/v3';
+const host = 'https://api.coingecko.com/api/v3'; 
 const actions = {
     coin: '/coins/markets',
 };
@@ -35,6 +30,12 @@ const defaultStorage = {
     address: null,
 };
 
+const elem = (sel) => document.querySelector(sel);
+const fixHeight = () => {
+    const doc = document.documentElement;
+    doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+};
+
 const storage =
     JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || defaultStorage;
 
@@ -48,9 +49,9 @@ const renderCard = (data) => {
 
     cardContainer.innerHTML = `
         <div class="card__price">${symbol}${price}</div>
-        <div class="card__change" style="color: ${
-            change < 0 ? 'red' : 'green'
-        }">${change < 0 ? change : '+' + change}% <span>&bull;</span> 24h</div>
+        <div class="card__change ${change < 0 ? 'falling' : 'rising'}"}">
+            <strong>${change}% <span>&bull;</span> 24h<strong>
+        </div>
     `;
 };
 
@@ -74,14 +75,14 @@ const changeCurrencyHandler = (item) => {
 };
 
 // START
-window.addEventListener('resize', appHeight);
-appHeight();
+window.addEventListener('resize', fixHeight);
+fixHeight();
 
 window.addEventListener('load', () => {
     fetchCoin();
 });
 
-const cardContainer = q('[data-toncoin-card]');
+const cardContainer = elem('[data-toncoin-card]');
 
 new Select('#select-currency', {
     data: currency,
@@ -89,4 +90,18 @@ new Select('#select-currency', {
     onChange(item) {
         changeCurrencyHandler(item);
     },
+    position: 'top'
 });
+
+const slidebarToggle = elem("#slidebar .slidebar__toggle");
+const slidebarBody = elem("#slidebar .slidebar__body");
+const slidebarToggleHandler = () => {
+    slidebarToggle.classList.toggle('active');
+    slidebarBody.classList.toggle('active');
+}
+slidebarToggle.addEventListener('click', slidebarToggleHandler);
+
+const connectBtn = elem("#connect-btn");
+connectBtn.addEventListener('click', () => {
+    alert("connect wallet");
+})

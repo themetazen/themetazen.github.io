@@ -2,28 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/assets/favicon.png" type="image/x-icon">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:site_name" content="The Metazen">
     <meta property="og:title" content="The Metazen">
     <meta property="og:description" content="The current value of The Open Network">
-    <meta property="og:url" content="https://themetazen.github.io">
+    <meta property="og:url" content="https://themetazen.xyz">
     <meta name="twitter:title" content="The Metazen">
     <meta name="twitter:card" content="summary_large_image">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style.css?v=2">
     <title>The Metazen</title>
 </head>
 <body>
     <div class="layout">
         <header class="header">
             <div class="header__logo"><a href="/">the.metazen</a></div>
-            <div style="width: 210px;">
-                <div id="select-currency"></div>
+
+            <div class="slidebar" id="slidebar">
+                <div class="slidebar__toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="slidebar__body">
+                    <button class="btn" id="connect-btn" disabled>Connect Wallet</button>
+                    <div style="width: 100%">
+                        <div id="select-currency"></div>
+                    </div>
+                </div>
             </div>
+
         </header>
 
         <div class="hero">
@@ -34,6 +41,5 @@
         </div>
 
     </div>
-   <script type="module" src="./app.js?v=2"></script>
 </body>
 </html>

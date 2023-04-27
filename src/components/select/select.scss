@@ -1,0 +1,97 @@
+.select {
+	width: 100%;
+	position: relative;
+  
+	&.open {
+		.select__dropdown {
+			display: block;
+		}
+	
+		.select__input > i {
+			transform: rotate(180deg);
+		}
+	
+		.select__backdrop {
+			display: block;
+		}
+	}
+  
+	&__input {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		background-color: rgba(0, 0, 0, 0.25);
+		border: 1px solid rgba(255, 255, 255, 0.03);
+		color: #eeeeee;
+		font-size: 14px;
+		border-radius: 5px;
+		height: 40px;
+		cursor: pointer;
+		padding: 0 1rem;
+
+		overflow: hidden;
+		white-space: nowrap;
+
+		& > span {
+			overflow: hidden;
+			word-wrap:break-word;
+		}
+	
+		& > i {
+			margin-left: 15px;
+			transform: rotate(0deg);
+			transition: transform 0.1s ease-in;
+		}
+	}
+  
+	&__dropdown {
+		display: none;
+		position: absolute;
+		background-color: rgba(0, 0, 0, 0.25);
+		backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.03);
+		border-radius: 5px;
+		left: 0;
+		right: 0;
+		margin-top: 0;
+		overflow-y: auto;
+	}
+
+	& > .top {
+		bottom: calc(100% + 10px);
+		top: unset;
+	}
+
+	& > .bottom {
+		top: calc(100% + 10px);
+        bottom: unset;
+	}
+  
+	&__list {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+  
+	&__backdrop {
+		position: fixed;
+		display: none;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -10;
+	}
+  
+	&__item {
+		padding: 1rem;
+		font-size: 14px;
+		text-shadow: 1px 1px 2px rgba($color: #000000, $alpha: 0.5);
+	
+		&:hover {
+			cursor: pointer;
+			background-color: rgba(255, 255, 255, 0.09);
+			transition: 0.15s background-color ease-in;
+		}
+	}
+}
