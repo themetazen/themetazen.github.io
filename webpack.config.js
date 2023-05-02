@@ -11,8 +11,8 @@ module.exports = {
     },
     plugins: [
         new HtmlPlugin({
-            template: './src/index.html',
-            favicon: './src/assets/favicon.png',
+            template: './public/index.html',
+            favicon: './public/favicon.png',
         }),
         new MiniCssPlugin({
             filename: 'common.css'
