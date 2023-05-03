@@ -225,12 +225,9 @@ a {
 		color: #30ff20;
 	  }
 	}
-
-
 }
 
 .slidebar {
-
 	&__toggle {
 		display: block;
 		position: relative;
@@ -243,8 +240,7 @@ a {
 		& > span {
 			display: block;
 			width: 33px;
-			height: 4px;
-			
+			height: 4px;	
 			background: rgb(255, 255, 255);
 			border-radius: 3px;
 		}
@@ -256,7 +252,6 @@ a {
 		& > span:nth-child(3) {
 			margin-top: 5px;
 		}
-
 	}
 
 	&__body {

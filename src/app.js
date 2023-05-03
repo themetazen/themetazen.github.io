@@ -10,19 +10,11 @@ const actions = {
 const GLOBAL_STORAGE_KEY = 'metazen';
 
 const currency = {
-    usd: 'United States Dollar',
-    eur: 'Euro',
-    rub: 'Russian Ruble',
-    krw: 'South Korean Won',
-    cny: 'China Yuan',
-};
-
-const currencySymbol = {
-    usd: '$',
-    eur: '€',
-    rub: '₽',
-    krw: '₩',
-    cny: '¥',
+    usd: {name: 'United States Dollar', symbol: '$'},
+    eur: {name: 'Euro', symbol: '€'},
+    rub: {name: 'Russian Ruble', symbol: '₽'},
+    krw: {name: 'South Korean Won', symbol: '₩'},
+    cny: {name: 'China Yuan', symbol: '¥'},
 };
 
 const defaultStorage = {
@@ -45,7 +37,7 @@ const renderCard = (data) => {
 
     const price = current_price.toFixed(2);
     const change = price_change_percentage_24h.toFixed(2);
-    const symbol = currencySymbol[storage.currency];
+    const symbol = currency[storage.currency].symbol;
 
     cardContainer.innerHTML = `
         <div class="card__price">${symbol}${price}</div>
@@ -56,23 +48,26 @@ const renderCard = (data) => {
 };
 
 const fetchCoin = async () => {
-    get(
-        host +
-            actions.coin +
-            `?vs_currency=${storage.currency}&ids=the-open-network`
-    )
-        .then(renderCard)
-        .catch((e) => console.error(e.error));
-
+    try {
+        const response = await get(`${host}${actions.coin}?vs_currency=${storage.currency}&ids=the-open-network`);
+        renderCard(response);
+    } catch (error) {
+        console.error(error.message);
+    }
     setTimeout(fetchCoin, 20000);
 };
 
 const changeCurrencyHandler = (item) => {
-    storage.currency = item;
+    storage.currency = item.name;
     localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
     cardContainer.innerHTML = `<div class="loader"></div>`;
     fetchCoin();
 };
+
+const slidebarToggleHandler = () => {
+    slidebarToggle.classList.toggle('active');
+    slidebarBody.classList.toggle('active');
+}
 
 // START
 window.addEventListener('resize', fixHeight);
@@ -83,9 +78,17 @@ window.addEventListener('load', () => {
 });
 
 const cardContainer = elem('[data-toncoin-card]');
+const slidebarToggle = elem("#slidebar .slidebar__toggle");
+const slidebarBody = elem("#slidebar .slidebar__body");
+const connectBtn = elem("#connect-btn");
+
+const dataSelectCurrency = Object.entries(currency).map((cur) => ({
+    name: cur[0],
+    label: cur[1].name
+}));
 
 new Select('#select-currency', {
-    data: currency,
+    data: dataSelectCurrency,
     valueDefault: storage.currency,
     onChange(item) {
         changeCurrencyHandler(item);
@@ -93,15 +96,7 @@ new Select('#select-currency', {
     position: 'top'
 });
 
-const slidebarToggle = elem("#slidebar .slidebar__toggle");
-const slidebarBody = elem("#slidebar .slidebar__body");
-const slidebarToggleHandler = () => {
-    slidebarToggle.classList.toggle('active');
-    slidebarBody.classList.toggle('active');
-}
 slidebarToggle.addEventListener('click', slidebarToggleHandler);
-
-const connectBtn = elem("#connect-btn");
 connectBtn.addEventListener('click', () => {
     alert("connect wallet");
 })
