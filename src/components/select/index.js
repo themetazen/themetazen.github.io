@@ -54,9 +54,11 @@ export default class Select {
     }
 
     select(id) {
+        const { data } = this.options;
         this.selected = id;
-        this.value.textContent = this.options.data[id];
-        this.options.onChange ? this.options.onChange(this.selected) : null;
+        const selected = data.find((item) => item.name === this.selected);
+        this.value.textContent = selected.label;
+        this.options.onChange ? this.options.onChange(selected) : null;
     }
 
     toggle() {
@@ -74,18 +76,20 @@ export default class Select {
     #template() {
         const { data } = this.options;
 
-        const text = this.selected
-            ? data[this.selected]
-            : data[Object.keys(data)[0]];
+        // const text = this.selected
+        //     ? data[this.selected]
+        //     : data[Object.keys(data)[0]];
 
-        const items = Object.keys(data).map((item) => {
-            return `<li class="select__item" data-type="item" data-id="${item}">${data[item]}</li>`;
+        const selected = this.selected ? data.find((item) => item.name === this.selected) : data[0];
+
+        const items = data.map((item) => {
+            return `<li class="select__item" data-type="item" data-id="${item.name}">${item.label}</li>`;
         });
 
         return `
         <div class="select__backdrop" data-type="backdrop"></div>
         <div class="select__input" data-type="input">
-          <span>${text}</span>
+          <span>${selected.label}</span>
           <i class="fa fa-chevron-down" data-type="arrow"></i> 
         </div>
         <div class="select__dropdown ${this.position}">

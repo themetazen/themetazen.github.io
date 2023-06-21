@@ -14,7 +14,7 @@ export async function get(route) {
             const body = response.json();
             return Promise.resolve(body);
         })
-        .catch((err) => Promise.reject({ error: 'Error parse' }));
+        .catch((err) => Promise.reject({ message: err }));
 }
 
 export async function post(route, body) {
@@ -34,5 +34,5 @@ export async function post(route, body) {
             const body = response.json();
             return Promise.resolve(body);
         })
-        .catch((err) => Promise.reject({ error: 'Error parse' }));
+        .catch((err) => Promise.reject({ message: err }));
 }

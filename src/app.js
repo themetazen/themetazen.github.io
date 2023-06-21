@@ -1,36 +1,33 @@
-import { get } from './utils/api.service';
 import Select from './components/select';
+import { createElement } from './utils/createElement';
+import { ButtonComponent } from './components/button';
 
 import './style/main.scss';
 
-const host = 'https://api.coingecko.com/api/v3'; 
+const host = 'https://api.coingecko.com/api/v3';
 const actions = {
     coin: '/coins/markets',
 };
 const GLOBAL_STORAGE_KEY = 'metazen';
 
 const currency = {
-    usd: 'United States Dollar',
-    eur: 'Euro',
-    rub: 'Russian Ruble',
-    krw: 'South Korean Won',
-    cny: 'China Yuan',
-};
-
-const currencySymbol = {
-    usd: '$',
-    eur: '€',
-    rub: '₽',
-    krw: '₩',
-    cny: '¥',
+    usd: {name: 'United States Dollar', symbol: '$'},
+    eur: {name: 'Euro', symbol: '€'},
+    rub: {name: 'Russian Ruble', symbol: '₽'},
+    aed: {name: 'UAE Dirham', symbol: 'DH'},
+    krw: {name: 'South Korean Won', symbol: '₩'},
+    cny: {name: 'China Yuan', symbol: '¥'},
 };
 
 const defaultStorage = {
     currency: 'usd',
     address: null,
+    lastPrice: 0.00,
+    lastChange: 0.00
 };
 
 const elem = (sel) => document.querySelector(sel);
+
 const fixHeight = () => {
     const doc = document.documentElement;
     doc.style.setProperty('--app-height', `${window.innerHeight}px`);
@@ -45,47 +42,75 @@ const renderCard = (data) => {
 
     const price = current_price.toFixed(2);
     const change = price_change_percentage_24h.toFixed(2);
-    const symbol = currencySymbol[storage.currency];
+    const symbol = currency[storage.currency].symbol;
 
-    cardContainer.innerHTML = `
+    const card = `
         <div class="card__price">${symbol}${price}</div>
         <div class="card__change ${change < 0 ? 'falling' : 'rising'}"}">
             <strong>${change}% <span>&bull;</span> 24h<strong>
         </div>
     `;
+    cardContainer.innerHTML = card;
 };
 
-const fetchCoin = async () => {
-    get(
-        host +
-            actions.coin +
-            `?vs_currency=${storage.currency}&ids=the-open-network`
-    )
-        .then(renderCard)
-        .catch((e) => console.error(e.error));
+const renderLoader = () => {
+    let loader = `<div class="loader"></div>`;
+    cardContainer.innerHTML = loader;
+}
 
-    setTimeout(fetchCoin, 20000);
+const fetchCoin = async (isInit = false) => {
+    if(isInit) {
+        renderLoader();
+    }
+
+    try {
+        const response = await fetch(`${host}${actions.coin}?vs_currency=${storage.currency}&ids=the-open-network`);
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        const data = await response.json();
+
+        renderCard(data);
+    } catch (error) {
+        throw error;
+    }
+
+    setTimeout(fetchCoin, 60000);
 };
 
 const changeCurrencyHandler = (item) => {
-    storage.currency = item;
+    storage.currency = item.name;
     localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
-    cardContainer.innerHTML = `<div class="loader"></div>`;
-    fetchCoin();
+    fetchCoin(true);
 };
+
+const slidebarToggleHandler = () => {
+    slidebarToggle.classList.toggle('active');
+    slidebarBody.classList.toggle('active');
+}
 
 // START
 window.addEventListener('resize', fixHeight);
 fixHeight();
 
 window.addEventListener('load', () => {
-    fetchCoin();
+    fetchCoin(true);
 });
 
 const cardContainer = elem('[data-toncoin-card]');
+const slidebarToggle = elem("#slidebar .slidebar__toggle");
+const slidebarBody = elem("#slidebar .slidebar__body");
+const accountContainer = elem("[data-account]");
 
-new Select('#select-currency', {
-    data: currency,
+const dataSelectCurrency = Object.entries(currency).map((cur) => ({
+    name: cur[0],
+    label: cur[1].name
+}));
+
+new Select('[data-select-currency]', {
+    data: dataSelectCurrency,
     valueDefault: storage.currency,
     onChange(item) {
         changeCurrencyHandler(item);
@@ -93,15 +118,21 @@ new Select('#select-currency', {
     position: 'top'
 });
 
-const slidebarToggle = elem("#slidebar .slidebar__toggle");
-const slidebarBody = elem("#slidebar .slidebar__body");
-const slidebarToggleHandler = () => {
-    slidebarToggle.classList.toggle('active');
-    slidebarBody.classList.toggle('active');
-}
 slidebarToggle.addEventListener('click', slidebarToggleHandler);
 
-const connectBtn = elem("#connect-btn");
-connectBtn.addEventListener('click', () => {
-    alert("connect wallet");
-})
+accountContainer.append(
+    ButtonComponent({
+        disabled: true,
+        text: 'Connect Wallet',
+        onClick: () => alert('auth')
+    })
+);
+
+// test createElement
+// const array = ['hello', 'world', 'hey'];
+// const boolTest = true;
+// accountContainer.append(createElement('ul', {},
+//     array.map((a) => createElement('li', {style: {color: '#fff', backgroundColor: 'green'}}, a)),
+//     (boolTest ? createElement('li', {}, 'test true') : ''),
+//     createElement('li', {}, 'test')
+// ));
