@@ -1,5 +1,4 @@
 import Select from './components/select';
-import { createElement } from './utils/createElement';
 import { ButtonComponent } from './components/button';
 
 import './style/main.scss';
@@ -19,11 +18,16 @@ const currency = {
     cny: {name: 'China Yuan', symbol: '¥'},
 };
 
-const defaultStorage = {
-    currency: 'usd',
-    address: null,
-    lastPrice: 0.00,
-    lastChange: 0.00
+const state = {
+    price: 0,
+    change: 0,
+
+    defaultStorage: {
+        currency: 'usd',
+        address: null,
+        lastPrice: 0.00,
+        lastChange: 0.00
+    }
 };
 
 const elem = (sel) => document.querySelector(sel);
@@ -34,20 +38,19 @@ const fixHeight = () => {
 };
 
 const storage =
-    JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || defaultStorage;
+    JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || state.defaultStorage;
 
-const renderCard = (data) => {
-    const coin = Object.assign({}, ...data);
-    const { current_price, price_change_percentage_24h } = coin;
+const renderCard = () => {
+    // const coin = Object.assign({}, ...data);
+    // const { current_price, price_change_percentage_24h } = coin;
 
-    const price = current_price.toFixed(2);
-    const change = price_change_percentage_24h.toFixed(2);
-    const symbol = currency[storage.currency].symbol;
+    // state.price = current_price.toFixed(2);
+    // state.change = price_change_percentage_24h.toFixed(2);
 
     const card = `
-        <div class="card__price">${symbol}${price}</div>
-        <div class="card__change ${change < 0 ? 'falling' : 'rising'}"}">
-            <strong>${change}% <span>&bull;</span> 24h<strong>
+        <div class="card__price">${currency[storage.currency].symbol}${state.price}</div>
+        <div class="card__change ${state.change < 0 ? 'falling' : 'rising'}"}">
+            <strong>${state.change}% <span>&bull;</span> 24h<strong>
         </div>
     `;
     cardContainer.innerHTML = card;
@@ -72,7 +75,13 @@ const fetchCoin = async (isInit = false) => {
 
         const data = await response.json();
 
-        renderCard(data);
+        const coin = Object.assign({}, ...data);
+        const { current_price, price_change_percentage_24h } = coin;
+
+        state.price = current_price.toFixed(2);
+        state.change = price_change_percentage_24h.toFixed(2);
+
+        renderCard();
     } catch (error) {
         throw error;
     }
