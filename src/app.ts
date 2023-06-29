@@ -1,15 +1,15 @@
 import Select from './components/select';
 import { ButtonComponent } from './components/button';
+import { ICurrency, IState } from './types';
 
-import './style/main.scss';
+enum coinGecko {
+    host = 'https://api.coingecko.com/api/v3',
+    actionCoin = '/coins/markets'
+}
 
-const host = 'https://api.coingecko.com/api/v3';
-const actions = {
-    coin: '/coins/markets',
-};
 const GLOBAL_STORAGE_KEY = 'metazen';
 
-const currency = {
+const currency: ICurrency = {
     usd: {name: 'United States Dollar', symbol: '$'},
     eur: {name: 'Euro', symbol: '€'},
     rub: {name: 'Russian Ruble', symbol: '₽'},
@@ -18,7 +18,7 @@ const currency = {
     cny: {name: 'China Yuan', symbol: '¥'},
 };
 
-const state = {
+const state: IState = {
     price: 0,
     change: 0,
 
@@ -30,7 +30,7 @@ const state = {
     }
 };
 
-const elem = (sel) => document.querySelector(sel);
+const elem = (sel: string) => document.querySelector(sel);
 
 const fixHeight = () => {
     const doc = document.documentElement;
@@ -41,24 +41,20 @@ const storage =
     JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || state.defaultStorage;
 
 const renderCard = () => {
-    // const coin = Object.assign({}, ...data);
-    // const { current_price, price_change_percentage_24h } = coin;
-
-    // state.price = current_price.toFixed(2);
-    // state.change = price_change_percentage_24h.toFixed(2);
-
-    const card = `
+    cardContainer.innerHTML = `
         <div class="card__price">${currency[storage.currency].symbol}${state.price}</div>
         <div class="card__change ${state.change < 0 ? 'falling' : 'rising'}"}">
             <strong>${state.change}% <span>&bull;</span> 24h<strong>
         </div>
     `;
-    cardContainer.innerHTML = card;
 };
 
 const renderLoader = () => {
-    let loader = `<div class="loader"></div>`;
-    cardContainer.innerHTML = loader;
+    cardContainer.innerHTML = `<div class="loader"></div>`;
+}
+
+const renderError = () => {
+    cardContainer.innerHTML = ``;
 }
 
 const fetchCoin = async (isInit = false) => {
@@ -67,7 +63,7 @@ const fetchCoin = async (isInit = false) => {
     }
 
     try {
-        const response = await fetch(`${host}${actions.coin}?vs_currency=${storage.currency}&ids=the-open-network`);
+        const response = await fetch(`${coinGecko.host}${coinGecko.actionCoin}?vs_currency=${storage.currency}&ids=the-open-network`);
 
         if (!response.ok) {
             throw new Error(await response.text());
@@ -82,14 +78,14 @@ const fetchCoin = async (isInit = false) => {
         state.change = price_change_percentage_24h.toFixed(2);
 
         renderCard();
-    } catch (error) {
-        throw error;
+    } catch (err) {
+        throw err;
     }
 
     setTimeout(fetchCoin, 60000);
 };
 
-const changeCurrencyHandler = (item) => {
+const changeCurrencyHandler = (item: {name: string, label: string}) => {
     storage.currency = item.name;
     localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
     fetchCoin(true);
@@ -121,7 +117,7 @@ const dataSelectCurrency = Object.entries(currency).map((cur) => ({
 new Select('[data-select-currency]', {
     data: dataSelectCurrency,
     valueDefault: storage.currency,
-    onChange(item) {
+    onChange(item: {name: string, label: string}) {
         changeCurrencyHandler(item);
     },
     position: 'top'
