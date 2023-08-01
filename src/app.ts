@@ -1,6 +1,7 @@
 import Select from './components/select';
 import { ButtonComponent } from './components/button';
 import { ICurrency, IState } from './types';
+import { getStorage, setStorage } from './utils/storage';
 
 enum coinGecko {
     host = 'https://api.coingecko.com/api/v3',
@@ -37,8 +38,7 @@ const fixHeight = () => {
     doc.style.setProperty('--app-height', `${window.innerHeight}px`);
 };
 
-const storage =
-    JSON.parse(localStorage.getItem(`${GLOBAL_STORAGE_KEY}`)) || state.defaultStorage;
+const storage = getStorage(GLOBAL_STORAGE_KEY) || state.defaultStorage;
 
 const renderCard = () => {
     cardContainer.innerHTML = `
@@ -87,7 +87,7 @@ const fetchCoin = async (isInit = false) => {
 
 const changeCurrencyHandler = (item: {name: string, label: string}) => {
     storage.currency = item.name;
-    localStorage.setItem(`${GLOBAL_STORAGE_KEY}`, JSON.stringify(storage));
+    setStorage(GLOBAL_STORAGE_KEY, storage);
     fetchCoin(true);
 };
 
