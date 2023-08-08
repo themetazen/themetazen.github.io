@@ -3,6 +3,10 @@ import { ButtonComponent } from './components/button';
 import { ICurrency, IState } from './types';
 import { getStorage, setStorage } from './utils/storage';
 
+import { THEME, TonConnectUI } from '@tonconnect/ui';
+import { createElement } from './utils/createElement';
+
+/** settings */
 enum coinGecko {
     host = 'https://api.coingecko.com/api/v3',
     actionCoin = '/coins/markets'
@@ -31,12 +35,52 @@ const state: IState = {
     }
 };
 
+/** helpers */
 const elem = (sel: string) => document.querySelector(sel);
 
 const fixHeight = () => {
     const doc = document.documentElement;
     doc.style.setProperty('--app-height', `${window.innerHeight}px`);
 };
+
+/** application */
+const tonConnect = new TonConnectUI({
+    manifestUrl: 'https://themetazen.xyz/tonconnect-manifest.json',
+    buttonRootId: 'connector',
+    uiPreferences: {
+        theme: THEME.DARK,
+        borderRadius: 'none'
+    }
+});
+tonConnect.onStatusChange(wallet => {
+    if (wallet) {
+        console.log(wallet);
+        accountContainer.replaceChildren();
+        accountContainer.append(
+            createElement('ul', {
+                className: 'account__nav'
+            }, 
+                createElement('li', {
+                    className: 'account__nav-item'
+                }, 
+                    createElement('a', {
+                        className: 'account__nav-link',
+                        onclick: () => tonConnect.disconnect()
+                    }, 'Disconnect')
+                )
+            )
+        );
+    } else {
+        accountContainer.replaceChildren();
+        accountContainer.append(
+            ButtonComponent({
+                disabled: false,
+                text: 'Connect Wallet',
+                onClick: () => tonConnect.connectWallet()
+            })
+        );
+    }
+});
 
 const storage = getStorage(GLOBAL_STORAGE_KEY) || state.defaultStorage;
 
@@ -51,10 +95,6 @@ const renderCard = () => {
 
 const renderLoader = () => {
     cardContainer.innerHTML = `<div class="loader"></div>`;
-}
-
-const renderError = () => {
-    cardContainer.innerHTML = ``;
 }
 
 const fetchCoin = async (isInit = false) => {
@@ -127,9 +167,9 @@ slidebarToggle.addEventListener('click', slidebarToggleHandler);
 
 accountContainer.append(
     ButtonComponent({
-        disabled: true,
+        disabled: false,
         text: 'Connect Wallet',
-        onClick: () => alert('auth')
+        onClick: () => tonConnect.connectWallet()
     })
 );
 
