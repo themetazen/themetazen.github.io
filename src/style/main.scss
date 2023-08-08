@@ -71,6 +71,10 @@ body {
   	) !important;
   	background-size: 20px 20px;
 	position: relative;
+
+	@media screen and (max-width: 420px) {
+		width: 420px;
+	}
 }
 
 .header, .bottom {
@@ -83,6 +87,10 @@ body {
     position: fixed;
     left: 0;
     right: 0;
+
+	@media screen and (max-width: 420px) {
+		width: 420px;
+	}
 }
 
 .header {
@@ -101,6 +109,15 @@ body {
 					     cyan 1.5px 0;
         }
     }
+
+	&__nav-controls {
+		margin-left: auto;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 20px;
+	}
 }
 
 .bottom {
@@ -263,5 +280,45 @@ body {
 		&.active {
 			right: 0;
 		}
+	}
+}
+
+.account__nav {
+
+	&-item {
+		border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+		&:last-child {
+			border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		}
+	}
+
+	&-link {
+		display: block;
+		width: 100%;
+		padding: 10px 25px !important;
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.15);
+			transition: 0.15s background-color ease-in;
+		}
+	}
+}
+
+button[data-tc-button="true"] {
+	cursor: pointer;
+	box-sizing: border-box;
+	height: 40px;
+
+	&>div[data-tc-text="true"] {
+		font-family: Montserrat, sans-serif;
+		font-weight: 700;
+		font-size: 12px;
+		text-transform: uppercase;
+		text-decoration: none;
+	}
+
+	&:hover {
+		transform: none;
 	}
 }
