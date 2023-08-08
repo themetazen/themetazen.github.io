@@ -16,6 +16,7 @@ module.exports = {
         new HtmlPlugin({
             template: './public/index.html',
             favicon: './public/favicon.png',
+            manifest: './public/tonconnect-manifest.json'
         }),
         new MiniCssPlugin({
             filename: 'common.css'
