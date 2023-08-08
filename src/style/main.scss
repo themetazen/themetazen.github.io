@@ -71,10 +71,6 @@ body {
   	) !important;
   	background-size: 20px 20px;
 	position: relative;
-
-	@media screen and (max-width: 420px) {
-		width: 420px;
-	}
 }
 
 .header, .bottom {
@@ -87,10 +83,6 @@ body {
     position: fixed;
     left: 0;
     right: 0;
-
-	@media screen and (max-width: 420px) {
-		width: 420px;
-	}
 }
 
 .header {
@@ -117,6 +109,12 @@ body {
 		align-items: center;
 		justify-content: flex-start;
 		gap: 20px;
+	}
+}
+
+.connector {
+	@media screen and (max-width: 430px) {
+		display: none;
 	}
 }
 
