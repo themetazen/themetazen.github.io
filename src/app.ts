@@ -1,10 +1,8 @@
 import Select from './components/select';
-import { ButtonComponent } from './components/button';
 import { ICurrency, IState } from './types';
 import { getStorage, setStorage } from './utils/storage';
 
-import { THEME, TonConnectUI } from '@tonconnect/ui';
-import { createElement } from './utils/createElement';
+import { CHAIN, THEME, TonConnectUI, toUserFriendlyAddress } from '@tonconnect/ui';
 
 /** settings */
 enum coinGecko {
@@ -52,33 +50,77 @@ const tonConnect = new TonConnectUI({
         borderRadius: 'none'
     }
 });
+
+const logoutHandler = () => {
+    return tonConnect.disconnect();
+}
+
+const connectHandler = () => {
+    return tonConnect.connectWallet();
+}
+
+const connectButtonSidebar = () => {
+    const button = document.createElement('button');
+    button.classList.add('btn');
+    button.textContent = 'Connect Wallet';
+    button.addEventListener('click', connectHandler, false);
+    return button;
+}
+
+const logoutButtonSidebar = () => {
+    const a = document.createElement('a');
+    a.innerHTML = `
+        <div class="account__nav-content">
+            <i class="icon logout"></i>Disconnect
+         </div>
+    `;
+    a.addEventListener('click', logoutHandler, false);
+    return a;
+}
+
+const copyButtonSidebar = (address: string) => {
+    const a = document.createElement('a');
+    a.innerHTML = '<i class="icon copy"></i>';
+    a.addEventListener('click', () => {
+        navigator.clipboard.writeText(address);
+        a.innerHTML = '<i class="icon check"></i>';
+        setTimeout(() => {
+            a.innerHTML = '<i class="icon copy"></i>';
+        }, 1000);
+    }, false);
+    return a;
+}
+
 tonConnect.onStatusChange(wallet => {
     if (wallet) {
-        console.log(wallet);
+        const userFriendlyAddress = toUserFriendlyAddress(wallet.account.address, wallet.account.chain === CHAIN.TESTNET);
+        const userFriendlyAddressForm = `${userFriendlyAddress.slice(0, 4)}...${userFriendlyAddress.slice(-4)}`;
+
         accountContainer.replaceChildren();
-        accountContainer.append(
-            createElement('ul', {
-                className: 'account__nav'
-            }, 
-                createElement('li', {
-                    className: 'account__nav-item'
-                }, 
-                    createElement('a', {
-                        className: 'account__nav-link',
-                        onclick: () => tonConnect.disconnect()
-                    }, 'Disconnect')
-                )
-            )
-        );
+        const ul = document.createElement('ul');
+        ul.classList.add('account__nav');
+
+        const itemWallet = document.createElement('li');
+        itemWallet.classList.add('account__nav-item');
+        itemWallet.innerHTML = `
+            <div class="account__nav-content">
+                <i class="icon wallet"></i>
+                <a href="https://tonviewer.com/${userFriendlyAddress}" target="_blank">${userFriendlyAddressForm}</a>
+            </div>
+        `;
+        itemWallet.append(copyButtonSidebar(userFriendlyAddress));
+
+        const itemLogout = document.createElement('li');
+        itemLogout.classList.add('account__nav-item', 'account__nav-item-clickable');
+        itemLogout.append(logoutButtonSidebar());
+
+        ul.append(itemWallet);
+        ul.append(itemLogout);
+
+        accountContainer.append(ul);
     } else {
         accountContainer.replaceChildren();
-        accountContainer.append(
-            ButtonComponent({
-                disabled: false,
-                text: 'Connect Wallet',
-                onClick: () => tonConnect.connectWallet()
-            })
-        );
+        accountContainer.append(connectButtonSidebar());
     }
 });
 
@@ -165,19 +207,4 @@ new Select('[data-select-currency]', {
 
 slidebarToggle.addEventListener('click', slidebarToggleHandler);
 
-accountContainer.append(
-    ButtonComponent({
-        disabled: false,
-        text: 'Connect Wallet',
-        onClick: () => tonConnect.connectWallet()
-    })
-);
-
-// test createElement
-// const array = ['hello', 'world', 'hey'];
-// const boolTest = true;
-// accountContainer.append(createElement('ul', {},
-//     array.map((a) => createElement('li', {style: {color: '#fff', backgroundColor: 'green'}}, a)),
-//     (boolTest ? createElement('li', {}, 'test true') : ''),
-//     createElement('li', {}, 'test')
-// ));
+accountContainer.append(connectButtonSidebar());

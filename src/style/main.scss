@@ -6,6 +6,7 @@
 	--text-color-primary: #eeeeee;
 	--background-primary: #0e1116;
 	--background-second: #011e33;
+	--rising: rgb(48, 255, 32);
 	--background-gradient: linear-gradient(
 	  to bottom,
 	  #0e1116,
@@ -45,6 +46,7 @@ ul {
 a {
 	cursor: pointer;
 	text-decoration: none;
+	color:rgb(255, 255, 255);
 }
 
 body {
@@ -225,7 +227,7 @@ body {
 	  }
 	  
 	  &.rising {
-		color: #30ff20;
+		color: var(--rising);
 	  }
 	}
 }
@@ -258,13 +260,13 @@ body {
 		flex-direction: column;
 		align-items: center;
 		justify-content: space-between;
-		width: 350px;
+		width: 300px;
 		backdrop-filter: blur(10px);
 			-webkit-backdrop-filter: blur(10px);
 			background-color: rgba(39, 39, 39, 0.1);
 			border-left: 1px solid rgba(255, 255, 255, 0.1);
 			box-shadow: 0 0px 80px rgba(0, 0, 0, 0.3);
-		padding: 30px;
+		padding: 20px;
 		padding-top: 95px;
 		z-index: 999;
 		transition: right 0.1s ease-in;
@@ -281,25 +283,57 @@ body {
 	}
 }
 
-.account__nav {
+i.icon {
+	width: 24px;
+	height: 24px;
+	background-repeat: no-repeat;
+	display: block;
+	position: relative;
+	-webkit-user-select: none;
+  	user-select: none;
 
+	&.wallet {
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>');
+	}
+
+	&.logout {
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>');
+	}
+
+	&.copy {
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-copy"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>');
+	}
+
+	&.check {
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(48, 255, 32)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+	}
+}
+
+.account__nav {
 	&-item {
-		border-top: 1px solid rgba(255, 255, 255, 0.05);
+		font-size: 15px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 10px 20px !important;
+		margin-bottom: 5px;
 
 		&:last-child {
-			border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+			margin-bottom: 0;
+		}
+
+		&-clickable:hover {
+			background-color: #18181A;
+			transition: 0.15s background-color ease-in;
 		}
 	}
 
-	&-link {
-		display: block;
-		width: 100%;
-		padding: 10px 25px !important;
-
-		&:hover {
-			background-color: rgba(0, 0, 0, 0.15);
-			transition: 0.15s background-color ease-in;
-		}
+	&-content {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color:rgb(255, 255, 255);
 	}
 }
 
@@ -318,5 +352,46 @@ button[data-tc-button="true"] {
 
 	&:hover {
 		transform: none;
+	}
+}
+
+.btn {
+	display: inline-block;
+	align-items: center;
+	border: 2px solid rgb(0, 0, 0);
+	padding: 10px 25px !important;
+	background-color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+	font-family: Montserrat, sans-serif;
+	font-weight: 700;
+	font-size: 12px;
+	text-transform: uppercase;
+	text-decoration: none;
+	letter-spacing: 1px;
+	cursor: pointer;
+	box-sizing: border-box;
+	transition: background-color 300ms ease 0s, 
+				color 300ms ease 0s;
+	width: 100%;
+	height: 40px;
+  
+	&--small {
+	  padding: 8px 20px !important;
+	}
+  
+	&--medium {
+	  padding: 10px 25px !important;
+	}
+  
+	&:hover:not([disabled]) {
+	  background-color: rgb(0, 0, 0);
+	  color: rgb(255, 255, 255);
+	}
+  
+	&:disabled {
+	  background: #aaa;
+	  border: aaa;
+	  color: a1a1a1;
+	  cursor: default;
 	}
 }
