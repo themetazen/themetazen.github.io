@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: ['./src/index.ts'],
@@ -15,12 +16,19 @@ module.exports = {
     plugins: [
         new HtmlPlugin({
             template: './public/index.html',
-            favicon: './public/favicon.png',
-            manifest: './public/tonconnect-manifest.json'
+            favicon: './public/favicon.png'
         }),
         new MiniCssPlugin({
             filename: 'common.css'
-        })
+        }),
+        new CopyPlugin({
+            patterns: [
+              { from: "./public/tonconnect-manifest.json", to: "tonconnect-manifest.json" },
+              { from: "./public/icon-128.png", to: "icon-128.png" },
+              { from: "./public/icon-256.png", to: "icon-256.png" },
+              { from: "./public/icon-512.png", to: "icon-512.png" },
+            ],
+        }),
     ],
     module: {
         rules: [
@@ -39,7 +47,7 @@ module.exports = {
                 ]
             }, 
             {
-                test: /\.(png|jpg|jpeg|svg|ico|gif)$/,
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 use: ['file-loader']
             }
         ]
