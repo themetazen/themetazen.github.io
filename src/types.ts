@@ -12,8 +12,17 @@ export interface IStorage {
     lastChange: number;
 }
 
+export interface userData {
+    address: string;
+    balance: number;
+    name: string | undefined;
+    status?: string;
+    is_scam?: boolean;
+}
+
 export interface IState {
     price: number;
     change: number;
+    userData: userData;
     defaultStorage: IStorage;
 }

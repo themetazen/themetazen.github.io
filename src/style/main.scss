@@ -7,6 +7,7 @@
 	--background-primary: #0e1116;
 	--background-second: #011e33;
 	--rising: rgb(48, 255, 32);
+	--logout: rgb(223, 101, 101);
 	--background-gradient: linear-gradient(
 	  to bottom,
 	  #0e1116,
@@ -297,7 +298,7 @@ i.icon {
 	}
 
 	&.logout {
-		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(255, 255, 255)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>');
+		background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgb(223, 101, 101)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>');
 	}
 
 	&.copy {
@@ -315,25 +316,42 @@ i.icon {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 15px;
 		width: 100%;
-		padding: 10px 20px !important;
+		padding: 10px 20px 10px 0px !important;
 		margin-bottom: 5px;
+		flex: 0 1;
 
 		&:last-child {
 			margin-bottom: 0;
-		}
-
-		&-clickable:hover {
-			background-color: #18181A;
-			transition: 0.15s background-color ease-in;
 		}
 	}
 
 	&-content {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 15px;
 		color:rgb(255, 255, 255);
+
+		& .name {
+			overflow: hidden;
+			width: 150px;
+			white-space: nowrap;
+
+			background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 70%, rgba(255, 255, 255, 0) 100%);
+			background-clip: text;
+			-webkit-background-clip: text;
+			color: transparent;			
+		}
+
+		& .sub {
+			font-size: 10px;
+			color: grey;
+		}
+
+		&.logout {
+			color: rgb(223, 101, 101);
+		}
 	}
 }
 
