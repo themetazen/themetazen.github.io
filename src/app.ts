@@ -10,6 +10,11 @@ enum coinGecko {
     actionCoin = '/coins/markets'
 }
 
+enum tonapi {
+    host = 'https://tonapi.io/v2',
+    actionAccounts = '/accounts'
+}
+
 const GLOBAL_STORAGE_KEY = 'metazen';
 
 const currency: ICurrency = {
@@ -24,6 +29,12 @@ const currency: ICurrency = {
 const state: IState = {
     price: 0,
     change: 0,
+
+    userData: {
+        address: '',
+        balance: 0,
+        name: ''
+    },
 
     defaultStorage: {
         currency: 'usd',
@@ -70,8 +81,8 @@ const connectButtonSidebar = () => {
 const logoutButtonSidebar = () => {
     const a = document.createElement('a');
     a.innerHTML = `
-        <div class="account__nav-content">
-            <i class="icon logout"></i>Disconnect
+        <div class="account__nav-content logout">
+            <i class="icon logout"></i>Log Out
          </div>
     `;
     a.addEventListener('click', logoutHandler, false);
@@ -91,10 +102,29 @@ const copyButtonSidebar = (address: string) => {
     return a;
 }
 
-tonConnect.onStatusChange(wallet => {
+tonConnect.onStatusChange(async wallet => {
     if (wallet) {
+        try {
+            const response = await fetch(`${tonapi.host}${tonapi.actionAccounts}/${wallet.account.address}`);
+    
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+    
+            const data = await response.json();
+    
+            const {address, balance, name} = data;
+    
+            state.userData.address = address;
+            state.userData.balance = balance;
+            state.userData.name = name;
+            
+        } catch (err) {
+            throw err;
+        }
+        
         const userFriendlyAddress = toUserFriendlyAddress(wallet.account.address, wallet.account.chain === CHAIN.TESTNET);
-        const userFriendlyAddressForm = `${userFriendlyAddress.slice(0, 4)}...${userFriendlyAddress.slice(-4)}`;
+        const normalizeUserFriendlyAddress = userFriendlyAddress.slice(0, 4) + "\u2026" + userFriendlyAddress.slice(-4);
 
         accountContainer.replaceChildren();
         const ul = document.createElement('ul');
@@ -105,13 +135,16 @@ tonConnect.onStatusChange(wallet => {
         itemWallet.innerHTML = `
             <div class="account__nav-content">
                 <i class="icon wallet"></i>
-                <a href="https://tonviewer.com/${userFriendlyAddress}" target="_blank">${userFriendlyAddressForm}</a>
+                <a href="https://tonviewer.com/${userFriendlyAddress}" target="_blank">
+                    <div class="name">${state.userData.name ? state.userData.name.slice(0, -4) : normalizeUserFriendlyAddress}</div>
+                    ${state.userData.name ? `<div class="sub">${normalizeUserFriendlyAddress}</div>` : ''}
+                </a>
             </div>
         `;
         itemWallet.append(copyButtonSidebar(userFriendlyAddress));
 
         const itemLogout = document.createElement('li');
-        itemLogout.classList.add('account__nav-item', 'account__nav-item-clickable');
+        itemLogout.classList.add('account__nav-item');
         itemLogout.append(logoutButtonSidebar());
 
         ul.append(itemWallet);
