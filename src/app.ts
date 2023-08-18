@@ -123,8 +123,9 @@ tonConnect.onStatusChange(async wallet => {
             throw err;
         }
         
-        const userFriendlyAddress = toUserFriendlyAddress(wallet.account.address, wallet.account.chain === CHAIN.TESTNET);
+        const userFriendlyAddress = toUserFriendlyAddress(state.userData.address, wallet.account.chain === CHAIN.TESTNET);
         const normalizeUserFriendlyAddress = userFriendlyAddress.slice(0, 4) + "\u2026" + userFriendlyAddress.slice(-4);
+        const balance = (state.userData.balance * 1e-9).toFixed(2);
 
         accountContainer.replaceChildren();
         const ul = document.createElement('ul');
@@ -143,11 +144,21 @@ tonConnect.onStatusChange(async wallet => {
         `;
         itemWallet.append(copyButtonSidebar(userFriendlyAddress));
 
+        const itemBalance = document.createElement('li');
+        itemBalance.classList.add('account__nav-item');
+        itemBalance.innerHTML = `
+            <div class="account__nav-content">
+                <i class="icon toncoin"></i>
+                <div class="balance">${balance} TON</div>
+            </div>
+        `;
+
         const itemLogout = document.createElement('li');
         itemLogout.classList.add('account__nav-item');
         itemLogout.append(logoutButtonSidebar());
 
         ul.append(itemWallet);
+        ul.append(itemBalance);
         ul.append(itemLogout);
 
         accountContainer.append(ul);
