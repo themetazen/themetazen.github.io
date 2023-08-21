@@ -102,72 +102,6 @@ const copyButtonSidebar = (address: string) => {
     return a;
 }
 
-tonConnect.onStatusChange(async wallet => {
-    if (wallet) {
-        try {
-            const response = await fetch(`${tonapi.host}${tonapi.actionAccounts}/${wallet.account.address}`);
-    
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-    
-            const data = await response.json();
-    
-            const {address, balance, name} = data;
-    
-            state.userData.address = address;
-            state.userData.balance = balance;
-            state.userData.name = name;
-            
-        } catch (err) {
-            throw err;
-        }
-        
-        const userFriendlyAddress = toUserFriendlyAddress(state.userData.address, wallet.account.chain === CHAIN.TESTNET);
-        const normalizeUserFriendlyAddress = userFriendlyAddress.slice(0, 4) + "\u2026" + userFriendlyAddress.slice(-4);
-        const balance = (state.userData.balance * 1e-9).toFixed(2);
-
-        accountContainer.replaceChildren();
-        const ul = document.createElement('ul');
-        ul.classList.add('account__nav');
-
-        const itemWallet = document.createElement('li');
-        itemWallet.classList.add('account__nav-item');
-        itemWallet.innerHTML = `
-            <div class="account__nav-content">
-                <i class="icon wallet"></i>
-                <a href="https://tonviewer.com/${userFriendlyAddress}" target="_blank">
-                    <div class="name">${state.userData.name ? state.userData.name.slice(0, -4) : normalizeUserFriendlyAddress}</div>
-                    ${state.userData.name ? `<div class="sub">${normalizeUserFriendlyAddress}</div>` : ''}
-                </a>
-            </div>
-        `;
-        itemWallet.append(copyButtonSidebar(userFriendlyAddress));
-
-        const itemBalance = document.createElement('li');
-        itemBalance.classList.add('account__nav-item');
-        itemBalance.innerHTML = `
-            <div class="account__nav-content">
-                <i class="icon toncoin"></i>
-                <div class="balance">${balance} TON</div>
-            </div>
-        `;
-
-        const itemLogout = document.createElement('li');
-        itemLogout.classList.add('account__nav-item');
-        itemLogout.append(logoutButtonSidebar());
-
-        ul.append(itemWallet);
-        ul.append(itemBalance);
-        ul.append(itemLogout);
-
-        accountContainer.append(ul);
-    } else {
-        accountContainer.replaceChildren();
-        accountContainer.append(connectButtonSidebar());
-    }
-});
-
 const storage = getStorage(GLOBAL_STORAGE_KEY) || state.defaultStorage;
 
 const renderCard = () => {
@@ -183,7 +117,7 @@ const renderLoader = () => {
     cardContainer.innerHTML = `<div class="loader"></div>`;
 }
 
-const fetchCoin = async (isInit = false) => {
+const getCoinPrice = async (isInit = false) => {
     if(isInit) {
         renderLoader();
     }
@@ -208,13 +142,81 @@ const fetchCoin = async (isInit = false) => {
         throw err;
     }
 
-    setTimeout(fetchCoin, 60000);
+    setTimeout(getCoinPrice, 60000);
 };
+
+tonConnect.onStatusChange(async wallet => {
+    if (wallet) {
+        try {
+            const response = await fetch(`${tonapi.host}${tonapi.actionAccounts}/${wallet.account.address}`);
+    
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+    
+            const data = await response.json();
+    
+            const {address, balance, name} = data;
+    
+            state.userData.address = address;
+            state.userData.balance = balance;
+            state.userData.name = name;
+            
+        } catch (err) {
+            throw err;
+        }
+        
+        const userFriendlyAddress = toUserFriendlyAddress(state.userData.address, wallet.account.chain === CHAIN.TESTNET);
+        const normalizeUserFriendlyAddress = userFriendlyAddress.slice(0, 4) + "\u2026" + userFriendlyAddress.slice(-4);
+        const balance = (state.userData.balance * 1e-9).toFixed(2);
+        const currencyBalance = (state.price * Number(balance)).toFixed(2);
+
+        accountContainer.replaceChildren();
+        const ul = document.createElement('ul');
+        ul.classList.add('account__nav');
+
+        const itemWallet = document.createElement('li');
+        itemWallet.classList.add('account__nav-item');
+        itemWallet.innerHTML = `
+            <div class="account__nav-content">
+                <i class="icon wallet"></i>
+                <a href="https://tonviewer.com/${userFriendlyAddress}" target="_blank">
+                    <div class="name">${state.userData.name ? state.userData.name.slice(0, -4) : normalizeUserFriendlyAddress}</div>
+                    ${state.userData.name ? `<div class="sub">${normalizeUserFriendlyAddress}</div>` : ''}
+                </a>
+            </div>
+        `;
+        itemWallet.append(copyButtonSidebar(userFriendlyAddress));
+
+        const itemBalance = document.createElement('li');
+        itemBalance.classList.add('account__nav-item');
+        itemBalance.innerHTML = `
+            <div class="account__nav-content">
+                <i class="icon toncoin"></i>
+                <div><div class="balance">${balance} TON</div>
+                <div class="sub">~ ${currency[storage.currency].symbol}${currencyBalance}</div></div>
+            </div>
+        `;
+
+        const itemLogout = document.createElement('li');
+        itemLogout.classList.add('account__nav-item');
+        itemLogout.append(logoutButtonSidebar());
+
+        ul.append(itemWallet);
+        ul.append(itemBalance);
+        ul.append(itemLogout);
+
+        accountContainer.append(ul);
+    } else {
+        accountContainer.replaceChildren();
+        accountContainer.append(connectButtonSidebar());
+    }
+});
 
 const changeCurrencyHandler = (item: {name: string, label: string}) => {
     storage.currency = item.name;
     setStorage(GLOBAL_STORAGE_KEY, storage);
-    fetchCoin(true);
+    getCoinPrice(true);
 };
 
 const slidebarToggleHandler = () => {
@@ -227,7 +229,7 @@ window.addEventListener('resize', fixHeight);
 fixHeight();
 
 window.addEventListener('load', () => {
-    fetchCoin(true);
+    getCoinPrice(true);
 });
 
 const cardContainer = elem('[data-toncoin-card]');
