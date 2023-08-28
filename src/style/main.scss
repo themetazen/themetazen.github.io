@@ -54,9 +54,14 @@ body {
 	font-family: 'Montserrat', sans-serif;
 	font-weight: normal;
 	font-size: 16px;
+	color: var(--text-color-primary);
+}
+
+.layout {
 	background-color: var(--background-primary);
 	background-image: var(--background-gradient);
-	color: var(--text-color-primary);
+	width: 100vw;
+	height: 100vh;
 }
 
 .header, .bottom {
@@ -382,6 +387,7 @@ button[data-tc-button="true"] {
 	display: inline-block;
 	align-items: center;
 	border: 2px solid rgb(0, 0, 0);
+	border-radius: 8px;
 	padding: 10px 25px !important;
 	background-color: rgb(255, 255, 255);
 	color: rgb(0, 0, 0);

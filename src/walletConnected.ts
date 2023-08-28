@@ -1,5 +1,5 @@
 import { CHAIN, THEME, TonConnect, TonConnectUI, toUserFriendlyAddress } from '@tonconnect/ui';
-import { TONAPI_ENDPOINT } from './constants';
+import { getAccountInfo, screenAddress } from './utils';
 
 export class WalletConnect {
     tonConnect: TonConnectUI;
@@ -16,15 +16,22 @@ export class WalletConnect {
             manifestUrl: 'https://themetazen.xyz/tonconnect-manifest.json',
             connector: this.connector,
             buttonRootId: 'connector',
-            uiPreferences: {
-                theme: THEME.DARK,
-                borderRadius: 'none'
-            }
         });
 
-        this.tonConnect.onStatusChange(wallet => {
-            if (wallet) {
-                this.store.setAddress(wallet.account.address);    
+        this.tonConnect.uiOptions = {
+            uiPreferences: {
+                theme: THEME.DARK,
+                borderRadius: 's'
+            },
+            actionsConfiguration: {
+                modals: [],
+                notifications: []
+            }
+        }
+
+        const unsubscribe = this.tonConnect.onStatusChange(walletInfo => {
+            if (walletInfo) {
+                this.store.setAddress(walletInfo.account.address);    
                 this.renderAccountContainer();
             } else {
                 this.container.replaceChildren();
@@ -38,38 +45,35 @@ export class WalletConnect {
             return;
         }
     
-        try {
-            const response = await fetch(`${TONAPI_ENDPOINT}/accounts/${this.store.address}`);
-    
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-    
-            const data = await response.json();
-    
+        getAccountInfo(this.store.address).then((data) => {
             const {
                 balance,
                 name,
                 status
             } = data;
-    
+            
             this.store.setBalance(balance);
             this.store.setName(name);
             this.store.setActiveStatus(status);
+        
+            this.container.replaceChildren();
             
-        } catch (err) {
-            throw err;
-        }
-    
-        this.container.replaceChildren();
-    
-        const ul = document.createElement('ul');
-        ul.classList.add('account__nav');
-            
+            const ul = document.createElement('ul');
+            ul.classList.add('account__nav');
+        
+            this.walletInfoItemsSidebar(ul);
+            this.logoutItemSidebar(ul);
+                
+            this.container.appendChild(ul);
+        });
+    }
+
+    walletInfoItemsSidebar(_node: HTMLUListElement) {
+        const node = _node;
+
         const userFriendlyAddress = 
             toUserFriendlyAddress(this.store.address, this.tonConnect.account.chain === CHAIN.TESTNET);
-        const screenUserFriendlyAddress = 
-                userFriendlyAddress.slice(0, 6) + "\u2026" + userFriendlyAddress.slice(-4);
+        const screenUserFriendlyAddress = screenAddress(userFriendlyAddress);
     
         const balance = (this.store.balance * 1e-9).toFixed(2);
         const currencyBalance = (this.store.price * Number(balance)).toFixed(2);
@@ -97,26 +101,16 @@ export class WalletConnect {
             </div>
         `;
     
-        const itemLogout = document.createElement('li');
-        itemLogout.classList.add('account__nav-item');
-        itemLogout.appendChild(this.logoutButtonSidebar());
-    
-        ul.appendChild(itemWallet);
-        ul.appendChild(itemBalance);
-        ul.appendChild(itemLogout);
-    
-        this.container.appendChild(ul);
+        node.appendChild(itemWallet);
+        node.appendChild(itemBalance);
     }
+    
+    logoutItemSidebar(_node: HTMLUListElement) {
+        const node = _node;
 
-    connectButtonSidebar() {
-        const button = document.createElement('button');
-        button.classList.add('btn');
-        button.textContent = 'Connect Wallet';
-        button.addEventListener('click', () => this.tonConnect.connectWallet(), false);
-        return button;
-    }
-    
-    logoutButtonSidebar() {
+        const item = document.createElement('li');
+        item.classList.add('account__nav-item');
+
         const a = document.createElement('a');
         a.innerHTML = `
             <div class="account__nav-content logout">
@@ -124,7 +118,9 @@ export class WalletConnect {
              </div>
         `;
         a.addEventListener('click', () => this.tonConnect.disconnect(), false);
-        return a;
+        
+        item.appendChild(a);
+        node.appendChild(item);
     }
     
     copyButtonSidebar(address: string)  {
@@ -139,6 +135,14 @@ export class WalletConnect {
             }, 1000);
         }, false);
         return a;
+    }
+
+    connectButtonSidebar() {
+        const button = document.createElement('button');
+        button.classList.add('btn');
+        button.textContent = 'Connect Wallet';
+        button.addEventListener('click', () => this.tonConnect.connectWallet(), false);
+        return button;
     }
 
     isLogged() {
