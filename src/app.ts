@@ -1,7 +1,7 @@
 import Select from './components/select';
 import { COINGECKO_ENDPOINT, COIN_KEY, GLOBAL_STORAGE_KEY } from './constants';
 import { State } from './state';
-import { elem, fixHeight, getCoinPrice } from './utils';
+import { elem, fixHeight, getCoinPrice, getCointPriceUpdate } from './utils';
 import { WalletConnect } from './walletConnected';
 
 const cardContainer = elem('[data-toncoin-card]');
@@ -70,7 +70,7 @@ function renderCardPrice(container:Element, isInit:boolean = false) {
         container.innerHTML = `<div class="loader"></div>`;
     }
 
-    getCoinPrice(store.currency).then((coin) => {
+    getCointPriceUpdate(store.currency).then((coin) => {
         store.setPrice(coin.price);
         store.setChange(coin.change);
 
