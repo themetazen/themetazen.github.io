@@ -96,8 +96,12 @@ export class WalletConnect {
         itemBalance.innerHTML = `
             <div class="account__nav-content">
                 <i class="icon toncoin"></i>
-               <div><div class="balance">${balance} TON</div>
-                <div class="sub">~ ${this.store.currencyList[this.store.currency].symbol}${currencyBalance}</div></div>
+               <div>
+                    <div class="balance">${balance} TON</div>
+                    <div class="sub">
+                        ≈ ${this.store.currencyList[this.store.currency].symbol}${currencyBalance}
+                    </div>
+                </div>
             </div>
         `;
     
