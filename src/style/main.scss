@@ -6,6 +6,8 @@
 	--text-color-primary: #eeeeee;
 	--background-primary: #0e1116;
 	--background-second: #011e33;
+	--logo-color-left: #FF00FF;
+	--logo-color-right: #00FFFF;
 	--rising: rgb(48, 255, 32);
 	--logout: rgb(223, 101, 101);
 	--background-gradient: linear-gradient(
@@ -57,6 +59,20 @@ body {
 	background-color: var(--background-primary);
 	background-image: var(--background-gradient);
 	color: var(--text-color-primary);
+	min-height: var(--app-height);
+}
+
+.hidden {
+	display: none;
+}
+
+.layout {
+	background-image: radial-gradient(
+    	var(--background-second) 1px,
+    	transparent 1px
+  	) !important;
+  	background-size: 20px 20px;
+	min-height: var(--app-height);
 }
 
 .header, .bottom {
@@ -83,8 +99,8 @@ body {
             color: #fff;
             font-size: 1.125em;
             font-weight: 700;
-			text-shadow: red -1.5px 0,
-					     cyan 1.5px 0;
+			text-shadow: var(--logo-color-left) -1.5px 0,
+					     var(--logo-color-right) 1.5px 0;
         }
     }
 
@@ -102,6 +118,10 @@ body {
 	@media screen and (max-width: 430px) {
 		display: none;
 	}
+}
+
+.content {
+	margin-top: 70px;
 }
 
 .bottom {
@@ -129,7 +149,7 @@ body {
 	}
 }
 
-.hero {
+.toncoinScreen {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -138,12 +158,8 @@ body {
 	height: 100vh;
     height: var(--app-height);
     overflow: hidden;
-	background-image: radial-gradient(
-    	var(--background-second) 1px,
-    	transparent 1px
-  	) !important;
-  	background-size: 20px 20px;
 	position: relative;
+	margin-top: -70px;
 
 	&__content {
 		display: flex;
@@ -178,20 +194,63 @@ body {
 	}
 }
 
-.loader {
-	width: 3rem;
-	height: 3rem;
-	border-radius: 50%;
-	border: 0.3rem solid rgba(#ffffff, 0.3);
-	border-top-color: rgba(#ffffff, 0.6);
-	border-bottom-color: rgba(#ffffff, 0.6);
-	animation: 1.5s spin infinite linear;
-	margin: 0 auto;
-}
+// .loader {
+// 	width: 3rem;
+// 	height: 3rem;
+// 	border-radius: 50%;
+// 	border: 0.3rem solid rgba(#ffffff, 0.3);
+// 	border-top-color: rgba(#ffffff, 0.6);
+// 	border-bottom-color: rgba(#ffffff, 0.6);
+// 	animation: 1.5s spin infinite linear;
+// 	margin: 0 auto;
+// }
   
+// @keyframes spin {
+// 	to {
+// 	  transform: rotate(360deg);
+// 	}
+// }
+
+.loader {
+	position: relative;
+	width: 2.5rem;
+	height: 2.5rem;
+	margin: 0 auto;
+
+	& span {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border: 2px solid #fff;
+		pointer-events: none;
+		animation: spin 3s linear infinite;
+
+		&:nth-child(1) {
+			border-radius: 67% 33% 46% 54% / 34% 73% 27% 66%;
+			border-color: var(--logo-color-left);
+		}
+
+		&:nth-child(2) {
+			animation-direction: reverse;
+			border-radius: 70% 30% 34% 66% / 59% 59% 41% 41%;
+		}
+
+		&:nth-child(3) {
+			animation-duration: 1.5s;
+			border-radius: 46% 54% 69% 31% / 22% 40% 60% 78%;
+			border-color: var(--logo-color-right);
+		}
+	}
+}
+
 @keyframes spin {
-	to {
-	  transform: rotate(360deg);
+	0% {
+		transform: rotate(0deg);
+	}
+	0% {
+		transform: rotate(360deg);
 	}
 }
 
@@ -200,36 +259,37 @@ body {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+	margin-top: 30px;
   
 	&__price {
-	  font-size: calc(1em + 6vw);
-	  letter-spacing: 1px;
-	  font-weight: 700;
-	  overflow: hidden;
-	  white-space: nowrap;
-	  width: 100%;
-  
-	  @media screen and (max-width: 479px) {
-		font-size: calc(1em + 10vw);
-	  }
+		font-size: calc(1em + 6vw);
+    	font-weight: 700;
+        line-height: 1.1em;
+		overflow: hidden;
+		white-space: nowrap;
+		width: 100%;
+	
+		@media screen and (max-width: 479px) {
+			font-size: calc(1em + 10vw);
+		}
 	}
   
 	&__change {
-	  color: #aaa;
-	  letter-spacing: 1px;
-	  font-size: 0.9em;
-	  
-	  @media screen and (max-width: 479px) {
-		font-size: 0.8em;
-	  }
+		color: #aaa;
+		letter-spacing: 1px;
+		font-size: 0.9em;
+		
+		@media screen and (max-width: 479px) {
+			font-size: 0.8em;
+		}
 
-	  &.falling {
-		color: #ff4040;
-	  }
-	  
-	  &.rising {
-		color: var(--rising);
-	  }
+		&.falling {
+			color: #ff4040;
+		}
+		
+		&.rising {
+			color: var(--rising);
+		}
 	}
 }
 

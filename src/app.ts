@@ -1,80 +1,48 @@
 import Select from './components/select';
-import { COINGECKO_ENDPOINT, COIN_KEY, GLOBAL_STORAGE_KEY } from './constants';
-import { State } from './state';
-import { elem, fixHeight, getCoinPrice, getCointPriceUpdate } from './utils';
+import { GLOBAL_STORAGE_KEY } from './constants';
+import store from './state';
+import { elem, fixHeight, getCointPriceUpdate } from './utils';
 import { WalletConnect } from './walletConnected';
 
-const cardContainer = elem('[data-toncoin-card]');
+const contentContainer = elem("[data-screen-content]");
 const accountContainer = elem("[data-account]");
 const slidebarToggle = elem("#slidebar .slidebar__toggle");
 const slidebarBody = elem("#slidebar .slidebar__body");
 
-// state
-const store = new (State as any)();
-
-store.address = '';
-store.name = '';
-store.balance = null;
-store.activeStatus = '';
-
-store.price = '';
-store.change = '';
-
-store.currencyList = {
-    usd: {name: 'United States Dollar', symbol: '$'},
-    eur: {name: 'Euro', symbol: '€'},
-    rub: {name: 'Russian Ruble', symbol: '₽'},
-    aed: {name: 'UAE Dirham', symbol: 'DH'},
-    krw: {name: 'South Korean Won', symbol: '₩'},
-    cny: {name: 'China Yuan', symbol: '¥'},
-};
-
-store.currency = 'usd';
-
-store.setAddress = function(address: string) {
-    this.address = address;
+const priceUpdate = async (currency: string, connect: any) => {
+    const coin = await getCointPriceUpdate(currency);
+    store.setPrice(coin.price);
+    store.setChange(coin.change);
+    connect.renderAccountContainer();
 }
 
-store.setName = function(name: string | undefined) {
-    this.name = name;
-}
+function toncoinScreen(props: {container: Element, isInit: boolean, connect: any}) {
+    const container = props.container;
+    const isInit = props.isInit || false;
+    const connect = props.connect;
 
-store.setBalance = function(balance: number) {
-    this.balance = balance;
-}
-
-store.setActiveStatus = function(status: string) {
-    this.activeStatus = status;
-}
-
-store.setPrice = function(price: number) {
-    this.price = price;
-}
-
-store.setChange = function(change: number) {
-    this.change = change;
-}
-
-store.setCurrency = function(currency: string) {
-    this.currency = currency;
-}
-// end state
-
-store.setCurrency(
-    localStorage.getItem(`${GLOBAL_STORAGE_KEY}_currency`) || 
-    store.currency
-);
-
-function renderCardPrice(container:Element, isInit:boolean = false) {
+    container.innerHTML = `
+        <div class="toncoinScreen">
+            <div class="toncoinScreen__content">
+                <h1 class="title">The current value of <span>The Open Network</span></h1>
+                <div class="card" data-toncoin-card></div>
+            </div>
+        </div>
+    `;
+    const cardContainer = elem("[data-toncoin-card]");
+    
     if (isInit) {
-        container.innerHTML = `<div class="loader"></div>`;
+        cardContainer.innerHTML = `
+            <div class="loader">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        `;
     }
 
-    getCointPriceUpdate(store.currency).then((coin) => {
-        store.setPrice(coin.price);
-        store.setChange(coin.change);
-
-        container.innerHTML = `
+    priceUpdate(store.currency, connect).then(() => {
+        cardContainer.innerHTML = `
             <div class="card__price">${store.currencyList[store.currency].symbol}${store.price}</div>
             <div class="card__change ${store.change < 0 ? 'falling' : 'rising'}"}">
                 <strong>${store.change}% <span>&bull;</span> 24h</strong>
@@ -82,7 +50,11 @@ function renderCardPrice(container:Element, isInit:boolean = false) {
         `;
     });
 
-    setTimeout(() => renderCardPrice(container), 60000);
+    setTimeout(() => toncoinScreen({
+        container: container,
+        connect: connect,
+        isInit: false
+    }), 60000);
 }
 
 const slidebarToggleHandler = () => {
@@ -90,34 +62,68 @@ const slidebarToggleHandler = () => {
     slidebarBody.classList.toggle('active');
 }
 
+const getUrlFromHash = (connect: any) => {
+    const urlFromHash = document.location.hash.substring(1).toLowerCase();
+
+    if (urlFromHash) {
+
+        switch (urlFromHash) {
+            default:
+                store.setCurrentScreen('/');
+                toncoinScreen({
+                    container: contentContainer,
+                    isInit: true,
+                    connect: connect
+                });
+                break;
+        }
+    } else {
+        store.setCurrentScreen('/');
+        toncoinScreen({
+            container: contentContainer,
+            isInit: true,
+            connect: connect
+        });
+    }
+}
+
 // START
-window.addEventListener('resize', fixHeight);
-fixHeight();
+window.onload = () => {
+    window.addEventListener('resize', fixHeight);
+    fixHeight();
 
-renderCardPrice(cardContainer, true);
-const connect = new WalletConnect(accountContainer, store);
+    store.setCurrency(
+        localStorage.getItem(`${GLOBAL_STORAGE_KEY}_currency`) || 
+        store.currency
+    );
 
-const changeCurrencyHandler = (item: {name: string, label: string}) => {
-    store.setCurrency(item.name);
-    localStorage.setItem(`${GLOBAL_STORAGE_KEY}_currency`, store.currency);
-    renderCardPrice(cardContainer, true);
-    setTimeout(() => connect.renderAccountContainer(), 200);
+    const connect = new WalletConnect(accountContainer, store);
+
+    getUrlFromHash(connect);
+    window.onpopstate = () => getUrlFromHash(connect);
+
+    // Select
+    const dataSelectCurrency = Object.entries(store.currencyList).map((cur: any) => ({
+        name: cur[0],
+        label: cur[1].name
+    }));
+    
+    new Select('[data-select-currency]', {
+        data: dataSelectCurrency,
+        valueDefault: store.currency,
+        onChange(item: {name: string, label: string}) {
+            changeCurrencyHandler(item);
+        },
+        position: 'top'
+    });
+
+    const changeCurrencyHandler = (item: {name: string, label: string}) => {
+        store.setCurrency(item.name);
+        localStorage.setItem(`${GLOBAL_STORAGE_KEY}_currency`, store.currency);
+        getUrlFromHash(connect);
+    };
+    // end Select
+    
+    slidebarToggle.addEventListener('click', slidebarToggleHandler);
+    accountContainer.append(connect.connectButtonSidebar());
 };
-
-const dataSelectCurrency = Object.entries(store.currencyList).map((cur: any) => ({
-    name: cur[0],
-    label: cur[1].name
-}));
-
-new Select('[data-select-currency]', {
-    data: dataSelectCurrency,
-    valueDefault: store.currency,
-    onChange(item: {name: string, label: string}) {
-        changeCurrencyHandler(item);
-    },
-    position: 'top'
-});
-
-slidebarToggle.addEventListener('click', slidebarToggleHandler);
-
-accountContainer.append(connect.connectButtonSidebar());
